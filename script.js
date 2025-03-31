@@ -42,6 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrollIndicator = document.querySelector(".scroll-indicator");
   const infoText = document.querySelector(".info-text");
 
+  // Переменные для обработки свайпов
+  let touchStartY = 0;
+  let touchEndY = 0;
+  const minSwipeDistance = 50; // Минимальное расстояние для свайпа
+  let isSwiping = false;
+
   // Функция для обновления активного пункта меню
   function updateActiveNavItem() {
     navItems.forEach((item) => {
@@ -191,6 +197,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }, scrollDelay);
   }
 
+  // Функция для обработки начала свайпа
+  function handleTouchStart(e) {
+    touchStartY = e.touches[0].clientY;
+  }
+
+  // Функция для обработки движения при свайпе
+  function handleTouchMove(e) {
+    if (isScrolling) return;
+    touchEndY = e.touches[0].clientY;
+
+    // Предотвращаем стандартную прокрутку страницы
+    e.preventDefault();
+  }
+
+  // Функция для обработки окончания свайпа
+  function handleTouchEnd() {
+    if (isScrolling || isSwiping) return;
+
+    const swipeDistance = touchStartY - touchEndY;
+    const currentTime = Date.now();
+
+    if (
+      Math.abs(swipeDistance) < minSwipeDistance ||
+      currentTime - lastScrollTime < scrollDelay
+    )
+      return;
+
+    isSwiping = true;
+    lastScrollTime = currentTime;
+
+    // Свайп вверх
+    if (swipeDistance > 0 && currentSection < 3) {
+      // Имитируем скролл вниз
+      handleScroll({ deltaY: 100 });
+    }
+    // Свайп вниз
+    else if (swipeDistance < 0 && currentSection > 0) {
+      // Имитируем скролл вверх
+      handleScroll({ deltaY: -100 });
+    }
+
+    // Сбрасываем флаг свайпа после задержки
+    setTimeout(() => {
+      isSwiping = false;
+    }, scrollDelay);
+  }
+
   // Добавляем обработчик скролла только для десктопа
   if (window.innerWidth > 768) {
     window.addEventListener("wheel", handleScroll, { passive: true });
@@ -212,11 +265,24 @@ document.addEventListener("DOMContentLoaded", () => {
       infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       updateActiveNavItem();
+
+      // Добавляем обработчики свайпов
+      document.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      document.addEventListener("touchend", handleTouchEnd, { passive: false });
     } else {
       document.body.style.overflow = "hidden";
       if (scrollIndicator) {
         scrollIndicator.style.display = "flex";
       }
+      // Удаляем обработчики свайпов
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     }
   }
 
