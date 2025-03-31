@@ -27,52 +27,220 @@ document.addEventListener("DOMContentLoaded", () => {
   // Вызываем инициализацию при загрузке
   initializeMenu();
 
-  // Функция переключения меню
-  function toggleMenu() {
-    const isOpening = !mainNav.classList.contains("active");
+  // Инициализация переменных
+  let isFullscreen = false;
+  let isScrolling = false;
+  let currentSection = 0;
+  let lastScrollTime = 0;
+  const scrollDelay = 3000; // Задержка между скроллами 3 секунды
 
-    burgerMenu.classList.toggle("active");
-    mainNav.classList.toggle("active");
-    overlay.classList.toggle("active");
-    document.body.classList.toggle("no-scroll");
+  // Получаем элементы
+  const showcaseSection = document.querySelector(".showcase-section");
+  const heroSection = document.querySelector(".hero-section");
+  const aboutSection = document.querySelector(".about-section");
+  const servicesSection = document.querySelector(".services-section");
+  const scrollIndicator = document.querySelector(".scroll-indicator");
+  const infoText = document.querySelector(".info-text");
 
-    // Анимация появления пунктов меню
-    if (isOpening) {
-      mainNav.style.display = "flex";
-      requestAnimationFrame(() => {
-        navItems.forEach((item, index) => {
-          setTimeout(() => {
-            item.style.opacity = "1";
-            item.style.transform = "translateX(0)";
-          }, 100 + index * 50);
-        });
-      });
+  // Функция для обновления активного пункта меню
+  function updateActiveNavItem() {
+    navItems.forEach((item) => {
+      if (currentSection === 2 && item.textContent.includes("О нас")) {
+        item.classList.add("active");
+      } else if (
+        currentSection === 3 &&
+        item.textContent.includes("Производство")
+      ) {
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
+    });
+  }
+
+  // Функция для перехода к секции "О нас"
+  function goToAboutSection() {
+    currentSection = 2;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.remove("fade");
+    aboutSection.classList.add("visible");
+    servicesSection.classList.remove("visible");
+    // Показываем элементы с задержкой
+    setTimeout(() => {
+      infoText.style.opacity = "1";
+      mainNav.style.opacity = "1";
+      scrollIndicator.classList.remove("hidden");
+    }, scrollDelay);
+    updateActiveNavItem();
+  }
+
+  // Функция для перехода к секции "Производство и сервис"
+  function goToServicesSection() {
+    currentSection = 3;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.remove("fade");
+    aboutSection.classList.remove("visible");
+    servicesSection.classList.add("visible");
+    // Показываем элементы с задержкой
+    setTimeout(() => {
+      infoText.style.opacity = "1";
+      mainNav.style.opacity = "1";
+      scrollIndicator.classList.remove("hidden");
+    }, scrollDelay);
+    updateActiveNavItem();
+  }
+
+  // Функция для обработки скролла
+  function handleScroll(e) {
+    if (isScrolling) return;
+
+    const currentTime = Date.now();
+    if (currentTime - lastScrollTime < scrollDelay) return;
+
+    isScrolling = true;
+    lastScrollTime = currentTime;
+
+    // Определяем направление скролла
+    if (e.deltaY > 0 && currentSection < 3) {
+      // Скролл вниз
+      currentSection++;
+
+      if (currentSection === 1) {
+        // Разворачиваем картинку
+        isFullscreen = true;
+        showcaseSection.classList.add("fullscreen");
+        heroSection.classList.add("fade");
+        // Скрываем элементы
+        infoText.style.opacity = "0";
+        mainNav.style.opacity = "0";
+        scrollIndicator.classList.add("hidden");
+      } else if (currentSection === 2) {
+        // Показываем секцию "О нас"
+        showcaseSection.classList.remove("fullscreen");
+        heroSection.classList.remove("fade");
+        aboutSection.classList.add("visible");
+        servicesSection.classList.remove("visible");
+        // Показываем элементы с задержкой
+        setTimeout(() => {
+          infoText.style.opacity = "1";
+          mainNav.style.opacity = "1";
+          scrollIndicator.classList.remove("hidden");
+        }, scrollDelay);
+        updateActiveNavItem();
+      } else if (currentSection === 3) {
+        // Показываем секцию "Производство и сервис"
+        showcaseSection.classList.remove("fullscreen");
+        heroSection.classList.remove("fade");
+        aboutSection.classList.remove("visible");
+        servicesSection.classList.add("visible");
+        // Показываем элементы с задержкой
+        setTimeout(() => {
+          infoText.style.opacity = "1";
+          mainNav.style.opacity = "1";
+          scrollIndicator.classList.remove("hidden");
+        }, scrollDelay);
+        updateActiveNavItem();
+      }
+    } else if (e.deltaY < 0 && currentSection > 0) {
+      // Скролл вверх
+      currentSection--;
+
+      if (currentSection === 0) {
+        // Возвращаем в исходное состояние
+        isFullscreen = false;
+        showcaseSection.classList.remove("fullscreen");
+        heroSection.classList.remove("fade");
+        aboutSection.classList.remove("visible");
+        servicesSection.classList.remove("visible");
+        // Показываем элементы с задержкой
+        setTimeout(() => {
+          infoText.style.opacity = "1";
+          mainNav.style.opacity = "1";
+          scrollIndicator.classList.remove("hidden");
+        }, scrollDelay);
+        updateActiveNavItem();
+      } else if (currentSection === 1) {
+        // Возвращаем картинку в полноэкранный режим
+        isFullscreen = true;
+        showcaseSection.classList.add("fullscreen");
+        heroSection.classList.add("fade");
+        // Скрываем элементы
+        infoText.style.opacity = "0";
+        mainNav.style.opacity = "0";
+        scrollIndicator.classList.add("hidden");
+        updateActiveNavItem();
+      } else if (currentSection === 2) {
+        // Возвращаемся к секции "О нас"
+        showcaseSection.classList.remove("fullscreen");
+        heroSection.classList.remove("fade");
+        aboutSection.classList.add("visible");
+        servicesSection.classList.remove("visible");
+        // Показываем элементы с задержкой
+        setTimeout(() => {
+          infoText.style.opacity = "1";
+          mainNav.style.opacity = "1";
+          scrollIndicator.classList.remove("hidden");
+        }, scrollDelay);
+        updateActiveNavItem();
+      }
+    }
+
+    // Сбрасываем флаг скролла после задержки
+    setTimeout(() => {
+      isScrolling = false;
+    }, scrollDelay);
+  }
+
+  // Добавляем обработчик скролла только для десктопа
+  if (window.innerWidth > 768) {
+    window.addEventListener("wheel", handleScroll, { passive: true });
+  }
+
+  // Сброс стилей для мобильных устройств
+  function resetMobileStyles() {
+    if (window.innerWidth <= 768) {
+      showcaseSection.classList.remove("fullscreen");
+      heroSection.classList.remove("fade");
+      aboutSection.classList.remove("visible");
+      servicesSection.classList.remove("visible");
+      isFullscreen = false;
+      currentSection = 0;
+      document.body.style.overflow = "auto";
+      if (scrollIndicator) {
+        scrollIndicator.style.display = "none";
+      }
+      infoText.style.opacity = "1";
+      mainNav.style.opacity = "1";
+      updateActiveNavItem();
     } else {
-      navItems.forEach((item) => {
-        item.style.opacity = "0";
-        item.style.transform = "translateX(20px)";
-      });
-      setTimeout(() => {
-        if (!mainNav.classList.contains("active")) {
-          mainNav.style.display = "none";
-        }
-      }, 300);
+      document.body.style.overflow = "hidden";
+      if (scrollIndicator) {
+        scrollIndicator.style.display = "flex";
+      }
     }
   }
 
-  // Обработчики для бургер-меню
-  burgerMenu.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleMenu();
-  });
+  // Обработчик изменения размера окна
+  window.addEventListener("resize", resetMobileStyles);
 
-  overlay.addEventListener("click", (e) => {
-    e.preventDefault();
-    if (mainNav.classList.contains("active")) {
-      toggleMenu();
-    }
-  });
+  // Инициализация при загрузке
+  resetMobileStyles();
+
+  // Обработка навигации
+  function toggleMenu() {
+    burgerMenu?.classList.toggle("active");
+    mainNav?.classList.toggle("active");
+    overlay?.classList.toggle("active");
+    document.body.classList.toggle("no-scroll");
+  }
+
+  if (burgerMenu) {
+    burgerMenu.addEventListener("click", toggleMenu);
+  }
+
+  if (overlay) {
+    overlay.addEventListener("click", toggleMenu);
+  }
 
   // Закрытие меню при клике на пункт меню
   navItems.forEach((item) => {
@@ -118,115 +286,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 250);
   });
 
-  // Обработка клика по пункту "Производство"
+  // Обработка клика по пунктам меню
   navItems.forEach((item) => {
     item.addEventListener("click", (e) => {
-      if (item.textContent.includes("Производство")) {
+      if (item.textContent.includes("О нас")) {
         e.preventDefault();
-
-        // Закрываем мобильное меню перед открытием FAQ
-        if (window.innerWidth <= 768 && mainNav.classList.contains("active")) {
-          toggleMenu();
-        }
-
-        // Очищаем контент
-        contentArea.innerHTML = "";
-
-        // Создаем кнопку "Назад"
-        const backButton = document.createElement("button");
-        backButton.classList.add("back-button");
-        backButton.textContent = "Назад";
-
-        // Создаем секцию FAQ
-        const faqSection = document.createElement("section");
-        faqSection.classList.add("faq-section");
-
-        const faqGrid = document.createElement("div");
-        faqGrid.classList.add("faq-grid");
-
-        // Данные для FAQ
-        const faqItems = [
-          {
-            question: "Материалы",
-            answer:
-              "Мы работаем с драгоценными металлами и любыми видами камней. К выбору материала мы подходим с особым вниманием, чтобы обеспечить качество, которого ожидают наши клиенты.",
-          },
-          {
-            question: "Этапы производства",
-            answer: `<ul class="faq-list">
-                <li>Дизайн</li>
-                <li>3D моделирование</li>
-                <li>Закупка метала и камней</li>
-                <li>Отлив металла</li>
-                <li>Обработка изделия</li>
-                <li>Контроль качества</li>
-                <li>Упаковка</li>
-                <li>Отправка</li>
-              </ul>`,
-          },
-          {
-            question: "Сроки изготовления",
-            answer:
-              "Каждый проект уникален, поэтому при создании дизайна мы сможем оценить сроки изготовления. Чаще всего это не более 2 недель, возможно изготовление партиями, срок обсуждается дополнительно в зависимости от загруженности производства.<br><br>При необходимости, срок возможно сократить.",
-          },
-          {
-            question: "Какая у вас минимальная партия?",
-            answer:
-              "Объем партии зависит от потребности бизнеса, бюджета и сложности производства. Так как наше ценообразование зависит от дизайна, то минимальную партию сможем обсудить на этапе проектирования изделия.<br><br>Ограничений со своей стороны не ставим, от 1 штуки.",
-          },
-          {
-            question: "Что такое сервис и как он выглядит?",
-            answer:
-              "Мы предоставляем сервисное обслуживание изделий при Партнерской программе на срок действия Партнерства. При формате Сотрудничества оказывает сервисное обслуживание в рамках 14 дней.<br><br>Так же возможно заключить договор на дополнительное обслуживание, если срок основного договора истек.",
-          },
-          {
-            question: "Как осуществляется доставка?",
-            answer: `Возможны 2 варианта доставки:<br><br>
-              <ul class="faq-list">
-                <li>До вашего магазина или склада, откуда вы самостоятельно осуществляете логистику изделий (Более актуально при офлайн продажах, позволяет не ожидать изготовления каждого изделия)</li>
-                <li>До конечного Клиента (Более актуально при онлайн продажах, особенно на этапе Пилота, позволяет сократить затраты на производство и хранение)</li>
-              </ul>`,
-          },
-        ];
-
-        // Создаем карточки FAQ
-        faqItems.forEach((item, index) => {
-          const faqItem = document.createElement("div");
-          faqItem.classList.add("faq-item");
-          faqItem.style.setProperty("--item-index", index);
-          faqItem.innerHTML = `
-            <h3 class="faq-question">${item.question}</h3>
-            <div class="faq-answer">${item.answer}</div>
-          `;
-          faqGrid.appendChild(faqItem);
-        });
-
-        // Добавляем элементы на страницу
-        faqSection.appendChild(faqGrid);
-        contentArea.appendChild(backButton);
-        contentArea.appendChild(faqSection);
-
-        // Показываем FAQ с анимацией
-        setTimeout(() => {
-          contentArea.classList.add("active");
-          setTimeout(() => {
-            backButton.classList.add("visible");
-            faqSection.classList.add("visible");
-          }, 100);
-        }, 50);
-
-        // Обработчик для кнопки назад
-        backButton.addEventListener("click", () => {
-          backButton.classList.remove("visible");
-          faqSection.classList.remove("visible");
-
-          setTimeout(() => {
-            contentArea.classList.remove("active");
-            setTimeout(() => {
-              contentArea.innerHTML = "";
-            }, 600);
-          }, 300);
-        });
+        goToAboutSection();
+      } else if (item.textContent.includes("Производство")) {
+        e.preventDefault();
+        goToServicesSection();
       }
     });
   });
@@ -238,4 +306,34 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Форма запроса консультации будет добавлена здесь");
     });
   }
+
+  // Инициализация аккордеона
+  const accordionHeaders = document.querySelectorAll(".services-header");
+
+  accordionHeaders.forEach((header) => {
+    header.addEventListener("click", () => {
+      const accordionId = header.getAttribute("data-accordion");
+      const body = document.getElementById(accordionId);
+      const isExpanded = header.getAttribute("aria-expanded") === "true";
+
+      // Закрываем все остальные аккордеоны
+      accordionHeaders.forEach((otherHeader) => {
+        if (otherHeader !== header) {
+          otherHeader.setAttribute("aria-expanded", "false");
+          const otherId = otherHeader.getAttribute("data-accordion");
+          const otherBody = document.getElementById(otherId);
+          otherBody.classList.remove("active");
+        }
+      });
+
+      // Открываем/закрываем текущий аккордеон
+      header.setAttribute("aria-expanded", !isExpanded);
+      body.classList.toggle("active");
+    });
+  });
+
+  // Устанавливаем начальное состояние
+  accordionHeaders.forEach((header) => {
+    header.setAttribute("aria-expanded", "false");
+  });
 });
