@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const burgerMenu = document.querySelector(".burger-menu");
   const mainNav = document.querySelector(".main-nav");
   const overlay = document.querySelector(".overlay");
+  const body = document.body;
 
   // Добавляем индексы для анимации пунктов меню
   navItems.forEach((item, index) => {
@@ -42,10 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrollIndicator = document.querySelector(".scroll-indicator");
   const infoText = document.querySelector(".info-text");
 
-  // Переменные для обработки свайпов
+  // Переменные для свайпов
   let touchStartY = 0;
   let touchEndY = 0;
-  const minSwipeDistance = 50; // Минимальное расстояние для свайпа
+  const minSwipeDistance = 50;
   let isSwiping = false;
 
   // Функция для обновления активного пункта меню
@@ -64,6 +65,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Функция для обновления видимости информации о компании
+  function updateCompanyInfo() {
+    const companyInfo = document.querySelector(".company-info");
+    if (currentSection === 0) {
+      companyInfo.style.opacity = "1";
+      companyInfo.style.visibility = "visible";
+    } else {
+      companyInfo.style.opacity = "0";
+      companyInfo.style.visibility = "hidden";
+    }
+  }
+
   // Функция для перехода к секции "О нас"
   function goToAboutSection() {
     currentSection = 2;
@@ -78,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollIndicator.classList.remove("hidden");
     }, scrollDelay);
     updateActiveNavItem();
+    updateCompanyInfo();
   }
 
   // Функция для перехода к секции "Производство и сервис"
@@ -94,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollIndicator.classList.remove("hidden");
     }, scrollDelay);
     updateActiveNavItem();
+    updateCompanyInfo();
   }
 
   // Функция для обработки скролла
@@ -120,51 +135,18 @@ document.addEventListener("DOMContentLoaded", () => {
         infoText.style.opacity = "0";
         mainNav.style.opacity = "0";
         scrollIndicator.classList.add("hidden");
+        updateCompanyInfo();
       } else if (currentSection === 2) {
-        // Показываем секцию "О нас"
-        showcaseSection.classList.remove("fullscreen");
-        heroSection.classList.remove("fade");
-        aboutSection.classList.add("visible");
-        servicesSection.classList.remove("visible");
-        // Показываем элементы с задержкой
-        setTimeout(() => {
-          infoText.style.opacity = "1";
-          mainNav.style.opacity = "1";
-          scrollIndicator.classList.remove("hidden");
-        }, scrollDelay);
-        updateActiveNavItem();
+        goToAboutSection();
       } else if (currentSection === 3) {
-        // Показываем секцию "Производство и сервис"
-        showcaseSection.classList.remove("fullscreen");
-        heroSection.classList.remove("fade");
-        aboutSection.classList.remove("visible");
-        servicesSection.classList.add("visible");
-        // Показываем элементы с задержкой
-        setTimeout(() => {
-          infoText.style.opacity = "1";
-          mainNav.style.opacity = "1";
-          scrollIndicator.classList.remove("hidden");
-        }, scrollDelay);
-        updateActiveNavItem();
+        goToServicesSection();
       }
     } else if (e.deltaY < 0 && currentSection > 0) {
       // Скролл вверх
       currentSection--;
 
       if (currentSection === 0) {
-        // Возвращаем в исходное состояние
-        isFullscreen = false;
-        showcaseSection.classList.remove("fullscreen");
-        heroSection.classList.remove("fade");
-        aboutSection.classList.remove("visible");
-        servicesSection.classList.remove("visible");
-        // Показываем элементы с задержкой
-        setTimeout(() => {
-          infoText.style.opacity = "1";
-          mainNav.style.opacity = "1";
-          scrollIndicator.classList.remove("hidden");
-        }, scrollDelay);
-        updateActiveNavItem();
+        goToHomeSection();
       } else if (currentSection === 1) {
         // Возвращаем картинку в полноэкранный режим
         isFullscreen = true;
@@ -174,73 +156,15 @@ document.addEventListener("DOMContentLoaded", () => {
         infoText.style.opacity = "0";
         mainNav.style.opacity = "0";
         scrollIndicator.classList.add("hidden");
-        updateActiveNavItem();
+        updateCompanyInfo();
       } else if (currentSection === 2) {
-        // Возвращаемся к секции "О нас"
-        showcaseSection.classList.remove("fullscreen");
-        heroSection.classList.remove("fade");
-        aboutSection.classList.add("visible");
-        servicesSection.classList.remove("visible");
-        // Показываем элементы с задержкой
-        setTimeout(() => {
-          infoText.style.opacity = "1";
-          mainNav.style.opacity = "1";
-          scrollIndicator.classList.remove("hidden");
-        }, scrollDelay);
-        updateActiveNavItem();
+        goToAboutSection();
       }
     }
 
     // Сбрасываем флаг скролла после задержки
     setTimeout(() => {
       isScrolling = false;
-    }, scrollDelay);
-  }
-
-  // Функция для обработки начала свайпа
-  function handleTouchStart(e) {
-    touchStartY = e.touches[0].clientY;
-  }
-
-  // Функция для обработки движения при свайпе
-  function handleTouchMove(e) {
-    if (isScrolling) return;
-    touchEndY = e.touches[0].clientY;
-
-    // Предотвращаем стандартную прокрутку страницы
-    e.preventDefault();
-  }
-
-  // Функция для обработки окончания свайпа
-  function handleTouchEnd() {
-    if (isScrolling || isSwiping) return;
-
-    const swipeDistance = touchStartY - touchEndY;
-    const currentTime = Date.now();
-
-    if (
-      Math.abs(swipeDistance) < minSwipeDistance ||
-      currentTime - lastScrollTime < scrollDelay
-    )
-      return;
-
-    isSwiping = true;
-    lastScrollTime = currentTime;
-
-    // Свайп вверх
-    if (swipeDistance > 0 && currentSection < 3) {
-      // Имитируем скролл вниз
-      handleScroll({ deltaY: 100 });
-    }
-    // Свайп вниз
-    else if (swipeDistance < 0 && currentSection > 0) {
-      // Имитируем скролл вверх
-      handleScroll({ deltaY: -100 });
-    }
-
-    // Сбрасываем флаг свайпа после задержки
-    setTimeout(() => {
-      isSwiping = false;
     }, scrollDelay);
   }
 
@@ -265,24 +189,11 @@ document.addEventListener("DOMContentLoaded", () => {
       infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       updateActiveNavItem();
-
-      // Добавляем обработчики свайпов
-      document.addEventListener("touchstart", handleTouchStart, {
-        passive: false,
-      });
-      document.addEventListener("touchmove", handleTouchMove, {
-        passive: false,
-      });
-      document.addEventListener("touchend", handleTouchEnd, { passive: false });
     } else {
       document.body.style.overflow = "hidden";
       if (scrollIndicator) {
         scrollIndicator.style.display = "flex";
       }
-      // Удаляем обработчики свайпов
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
     }
   }
 
@@ -292,64 +203,56 @@ document.addEventListener("DOMContentLoaded", () => {
   // Инициализация при загрузке
   resetMobileStyles();
 
-  // Обработка навигации
+  // Переключение меню
   function toggleMenu() {
-    burgerMenu?.classList.toggle("active");
-    mainNav?.classList.toggle("active");
-    overlay?.classList.toggle("active");
-    document.body.classList.toggle("no-scroll");
+    burgerMenu.classList.toggle("active");
+    mainNav.classList.toggle("active");
+    overlay.classList.toggle("active");
+    body.classList.toggle("no-scroll");
+
+    if (mainNav.classList.contains("active")) {
+      mainNav.style.display = "flex";
+    } else {
+      setTimeout(() => {
+        if (!mainNav.classList.contains("active")) {
+          mainNav.style.display = "none";
+        }
+      }, 300);
+    }
   }
 
-  if (burgerMenu) {
-    burgerMenu.addEventListener("click", toggleMenu);
+  // Закрытие меню
+  function closeMenu() {
+    burgerMenu.classList.remove("active");
+    mainNav.classList.remove("active");
+    overlay.classList.remove("active");
+    body.classList.remove("no-scroll");
+
+    setTimeout(() => {
+      if (!mainNav.classList.contains("active")) {
+        mainNav.style.display = "none";
+      }
+    }, 300);
   }
 
-  if (overlay) {
-    overlay.addEventListener("click", toggleMenu);
-  }
+  // Обработчики событий
+  burgerMenu.addEventListener("click", toggleMenu);
+  overlay.addEventListener("click", closeMenu);
 
-  // Закрытие меню при клике на пункт меню
   navItems.forEach((item) => {
     item.addEventListener("click", () => {
-      if (window.innerWidth <= 768 && mainNav.classList.contains("active")) {
-        toggleMenu();
+      if (window.innerWidth <= 768) {
+        closeMenu();
       }
     });
   });
 
-  // Закрытие меню при клике вне меню
-  document.addEventListener("click", (e) => {
-    if (
-      window.innerWidth <= 768 &&
-      mainNav.classList.contains("active") &&
-      !mainNav.contains(e.target) &&
-      !burgerMenu.contains(e.target)
-    ) {
-      toggleMenu();
-    }
-  });
-
   // Обработка изменения размера окна
-  let resizeTimer;
   window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      if (window.innerWidth > 768) {
-        mainNav.style.display = "flex";
-        burgerMenu.classList.remove("active");
-        mainNav.classList.remove("active");
-        overlay.classList.remove("active");
-        document.body.classList.remove("no-scroll");
-        navItems.forEach((item) => {
-          item.style.opacity = "1";
-          item.style.transform = "translateX(0)";
-        });
-      } else {
-        if (!mainNav.classList.contains("active")) {
-          mainNav.style.display = "none";
-        }
-      }
-    }, 250);
+    resetMobileStyles();
+    if (window.innerWidth > 768) {
+      closeMenu();
+    }
   });
 
   // Обработка клика по пунктам меню
@@ -378,28 +281,132 @@ document.addEventListener("DOMContentLoaded", () => {
 
   accordionHeaders.forEach((header) => {
     header.addEventListener("click", () => {
-      const accordionId = header.getAttribute("data-accordion");
-      const body = document.getElementById(accordionId);
-      const isExpanded = header.getAttribute("aria-expanded") === "true";
+      const body = header.nextElementSibling;
+      const icon = header.querySelector(".accordion-icon");
 
       // Закрываем все остальные аккордеоны
       accordionHeaders.forEach((otherHeader) => {
         if (otherHeader !== header) {
-          otherHeader.setAttribute("aria-expanded", "false");
-          const otherId = otherHeader.getAttribute("data-accordion");
-          const otherBody = document.getElementById(otherId);
+          const otherBody = otherHeader.nextElementSibling;
+          const otherIcon = otherHeader.querySelector(".accordion-icon");
           otherBody.classList.remove("active");
+          otherHeader.setAttribute("aria-expanded", "false");
+          if (otherIcon) otherIcon.style.transform = "rotate(0deg)";
         }
       });
 
       // Открываем/закрываем текущий аккордеон
-      header.setAttribute("aria-expanded", !isExpanded);
       body.classList.toggle("active");
+      const isExpanded = body.classList.contains("active");
+      header.setAttribute("aria-expanded", isExpanded);
+      if (icon)
+        icon.style.transform = isExpanded ? "rotate(45deg)" : "rotate(0deg)";
     });
   });
 
   // Устанавливаем начальное состояние
   accordionHeaders.forEach((header) => {
     header.setAttribute("aria-expanded", "false");
+  });
+
+  // Функция для обработки начала свайпа
+  function handleTouchStart(e) {
+    touchStartY = e.touches[0].clientY;
+  }
+
+  // Функция для обработки движения при свайпе
+  function handleTouchMove(e) {
+    if (isScrolling) return;
+    touchEndY = e.touches[0].clientY;
+  }
+
+  // Функция для обработки окончания свайпа
+  function handleTouchEnd() {
+    if (isScrolling || isSwiping) return;
+
+    const swipeDistance = touchStartY - touchEndY;
+    const currentTime = Date.now();
+
+    if (
+      Math.abs(swipeDistance) < minSwipeDistance ||
+      currentTime - lastScrollTime < scrollDelay
+    )
+      return;
+
+    isSwiping = true;
+    lastScrollTime = currentTime;
+
+    // Свайп вверх
+    if (swipeDistance > 0) {
+      if (currentSection === 0) {
+        goToAboutSection();
+      } else if (currentSection === 2) {
+        goToServicesSection();
+      }
+    }
+    // Свайп вниз
+    else if (swipeDistance < 0) {
+      if (currentSection === 3) {
+        goToAboutSection();
+      } else if (currentSection === 2) {
+        goToHomeSection();
+      }
+    }
+
+    setTimeout(() => {
+      isSwiping = false;
+    }, scrollDelay);
+  }
+
+  // Функция для возврата на главную
+  function goToHomeSection() {
+    currentSection = 0;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.remove("fade");
+    aboutSection.classList.remove("visible");
+    servicesSection.classList.remove("visible");
+    updateActiveNavItem();
+    updateCompanyInfo();
+  }
+
+  // Добавляем обработчики свайпов для мобильных устройств
+  if (window.innerWidth <= 768) {
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: true,
+    });
+    document.addEventListener("touchmove", handleTouchMove, { passive: true });
+    document.addEventListener("touchend", handleTouchEnd);
+
+    // Обновляем стили секций для мобильной версии
+    const sections = [heroSection, aboutSection, servicesSection];
+    sections.forEach((section) => {
+      if (section) {
+        section.style.position = "fixed";
+        section.style.width = "100%";
+        section.style.height = "100vh";
+        section.style.overflow = "hidden";
+      }
+    });
+  }
+
+  // Обновляем обработчик изменения размера окна
+  window.addEventListener("resize", () => {
+    resetMobileStyles();
+    if (window.innerWidth > 768) {
+      closeMenu();
+      // Удаляем обработчики свайпов
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    } else {
+      // Добавляем обработчики свайпов
+      document.addEventListener("touchstart", handleTouchStart, {
+        passive: true,
+      });
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: true,
+      });
+      document.addEventListener("touchend", handleTouchEnd);
+    }
   });
 });

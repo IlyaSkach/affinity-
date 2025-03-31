@@ -98,7 +98,7 @@ body {
 
 .hero-section {
   background-color: var(--light-blue);
-  padding: 2rem;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -107,8 +107,6 @@ body {
   z-index: 2;
   transform: translateX(0);
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 100vh;
-  max-height: 100vh;
 }
 
 .hero-section::after {
@@ -145,7 +143,7 @@ body {
 }
 
 .showcase-section {
-  padding: 2rem;
+  padding: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,8 +151,6 @@ body {
   transition: all 0.8s ease;
   z-index: 1;
   transform-origin: center;
-  min-height: 100vh;
-  max-height: 100vh;
 }
 
 .product-showcase {
@@ -277,6 +273,9 @@ body {
   font-size: 0.9rem;
   color: #666;
   z-index: 3;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .info-text {
@@ -525,11 +524,8 @@ body {
 
 @media screen and (max-width: 768px) {
   body {
-    overflow-y: hidden !important;
+    overflow: hidden;
     touch-action: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
   }
 
   .container {
@@ -538,220 +534,135 @@ body {
   }
 
   .hero-section,
-  .showcase-section,
   .about-section,
   .services-section {
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, opacity;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    padding: 6rem 2rem 2rem;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
   }
 
-  .hero-section.fade {
-    transform: translateY(-100%);
-  }
-
-  .showcase-section.fullscreen {
+  .hero-section {
     transform: translateY(0);
+    z-index: 3;
+  }
+
+  .about-section {
+    transform: translateY(100%);
+    z-index: 2;
+  }
+
+  .services-section {
+    transform: translateY(100%);
+    z-index: 2;
   }
 
   .about-section.visible {
     transform: translateY(0);
+    z-index: 4;
   }
 
   .services-section.visible {
     transform: translateY(0);
+    z-index: 4;
   }
 
-  .about-section:not(.visible),
-  .services-section:not(.visible) {
-    transform: translateY(100%);
+  .services-content {
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0;
   }
 
-  /* Стили для аккордеона на мобильных устройствах */
-  .services-card {
-    margin-bottom: 1rem;
-  }
-
-  .services-header {
+  .services-grid {
     padding: 1rem;
   }
 
-  .services-body {
-    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Индикатор свайпа */
+  .swipe-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
   }
 
-  .services-body.active {
-    height: auto;
+  .swipe-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
   }
 
-  /* Улучшаем отзывчивость для тач-событий */
-  .services-header {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+  .swipe-dot.active {
+    background-color: var(--accent-color);
+    transform: scale(1.2);
   }
 
-  .accordion-icon {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .hero-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
   }
 
-  /* Оптимизация производительности анимаций */
-  .hero-section,
-  .showcase-section,
-  .about-section,
-  .services-section {
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
+  .hero-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .consultation-btn {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
   }
 
   .main-nav {
     position: fixed;
     top: 0;
-    right: -100%;
-    width: 80%;
+    left: -100%;
+    width: 100%;
     height: 100vh;
     background-color: var(--white-color);
+    display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 5rem 2rem 2rem;
-    transition: all 0.3s ease-in-out;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-    gap: 1rem;
-    transform: translateX(100%);
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transition: left 0.3s ease-in-out;
     z-index: 1001;
   }
 
   .main-nav.active {
-    right: 0;
-    transform: translateX(0);
-  }
-
-  .content-area {
-    z-index: 98;
+    left: 0;
   }
 
   .nav-item {
-    width: 100%;
-    text-align: left;
-    margin: 0;
-    padding: 1rem;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    border: none;
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    width: 90%;
+    text-align: center;
+    background-color: var(--light-blue);
+    border-radius: 12px;
     transition: all 0.3s ease;
-    opacity: 0;
-    transform: translateX(20px);
-    color: var(--text-color);
-    text-decoration: none;
-    position: relative;
-  }
-
-  .nav-item::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 1rem;
-    width: calc(100% - 2rem);
-    height: 1px;
-    background-color: rgba(0, 0, 0, 0.1);
-  }
-
-  .main-nav.active .nav-item {
-    opacity: 1;
-    transform: translateX(0);
-    transition-delay: calc(0.1s * var(--item-index));
   }
 
   .nav-item:hover {
-    background-color: var(--light-blue);
-  }
-
-  .hero-section {
-    padding: 2rem 1.5rem;
-    min-height: 80vh;
-  }
-
-  .hero-title {
-    font-size: 2.5rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.1rem;
-  }
-
-  .showcase-section {
-    padding: 2rem 1.5rem;
-  }
-
-  .showcase-section::before,
-  .showcase-section::after {
-    display: none;
-  }
-
-  .product-card {
-    padding: 0.8rem;
-  }
-
-  .product-title {
-    font-size: 1.5rem;
-  }
-
-  .faq-grid {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-  }
-
-  .faq-item {
-    padding: 1.5rem;
-  }
-
-  .faq-question {
-    font-size: 1.3rem;
-  }
-
-  .social-icons {
-    bottom: 1rem;
-    right: 1rem;
-    flex-direction: row;
-  }
-
-  .company-info {
-    position: static;
-    transform: none;
-    width: 100%;
-    padding: 0.75rem;
-    background-color: var(--white-color);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 2rem;
-    font-size: 0.875rem;
-    color: var(--text-color);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .info-text {
-    white-space: normal;
-    font-size: 0.75rem;
-    padding: 0 1rem;
-  }
-
-  .main-container {
-    padding-bottom: 4rem; /* Добавляем отступ для футера */
-  }
-
-  .back-button {
-    top: 1rem;
-    left: 1rem;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
+    background-color: var(--accent-color);
+    color: var(--white-color);
   }
 
   .burger-menu {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 30px;
-    height: 24px;
+    width: 32px;
+    height: 26px;
     position: fixed;
     top: 20px;
     right: 20px;
@@ -771,39 +682,82 @@ body {
   }
 
   .burger-menu.active .burger-line:nth-child(1) {
-    transform: translateY(11px) rotate(45deg);
+    transform: translateY(12px) rotate(45deg);
   }
 
   .burger-menu.active .burger-line:nth-child(2) {
     opacity: 0;
-    transform: translateX(-10px);
   }
 
   .burger-menu.active .burger-line:nth-child(3) {
-    transform: translateY(-11px) rotate(-45deg);
+    transform: translateY(-12px) rotate(-45deg);
   }
 
   .overlay {
-    display: block;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1001;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    z-index: 1000;
   }
 
   .overlay.active {
-    opacity: 1;
-    visibility: visible;
+    display: block;
   }
 
-  body.no-scroll {
-    overflow: hidden;
+  .showcase-section {
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .about-section {
+    position: relative;
+    min-height: 100vh;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    padding: 6rem 2rem 2rem;
+  }
+
+  .services-section {
+    position: relative;
+    min-height: 100vh;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    padding: 6rem 2rem 2rem;
+  }
+
+  .services-content {
+    padding: 0;
+    height: auto;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .services-card {
+    margin-bottom: 1rem;
+  }
+
+  .social-icons {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .company-info {
+    position: relative;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 2rem;
   }
 }
 
