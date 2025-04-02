@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Инициализация переменных
   let isFullscreen = false;
   let isScrolling = false;
-  let currentSection = 0;
+  let currentSection = null;
   let lastScrollTime = 0;
   const scrollDelay = 3000; // Задержка между скроллами 3 секунды
 
@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSection = document.querySelector(".hero-section");
   const aboutSection = document.querySelector(".about-section");
   const servicesSection = document.querySelector(".services-section");
+  const jewelrySection = document.querySelector(".jewelry-section");
+  const partnerSection = document.querySelector(".partner-section");
   const scrollIndicator = document.querySelector(".scroll-indicator");
   const infoText = document.querySelector(".info-text");
 
@@ -51,24 +53,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Функция для обновления активного пункта меню
   function updateActiveNavItem() {
+    const navItems = document.querySelectorAll(".nav-item");
     navItems.forEach((item) => {
-      if (currentSection === 2 && item.textContent.includes("О нас")) {
-        item.classList.add("active");
-      } else if (
-        currentSection === 3 &&
-        item.textContent.includes("Производство")
-      ) {
-        item.classList.add("active");
-      } else {
-        item.classList.remove("active");
-      }
+      item.classList.remove("active");
     });
+
+    if (currentSection === aboutSection) {
+      document
+        .querySelector('.nav-item[data-section="about"]')
+        .classList.add("active");
+    } else if (currentSection === servicesSection) {
+      document
+        .querySelector('.nav-item[data-section="services"]')
+        .classList.add("active");
+    } else if (currentSection === jewelrySection) {
+      document
+        .querySelector('.nav-item[data-section="jewelry"]')
+        .classList.add("active");
+    } else if (currentSection === partnerSection) {
+      document
+        .querySelector('.nav-item[data-section="partner"]')
+        .classList.add("active");
+    }
   }
 
   // Функция для обновления видимости информации о компании
   function updateCompanyInfo() {
     const companyInfo = document.querySelector(".company-info");
-    if (currentSection === 0) {
+    if (currentSection === showcaseSection) {
       companyInfo.style.opacity = "1";
       companyInfo.style.visibility = "visible";
     } else {
@@ -79,36 +91,113 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Функция для перехода к секции "О нас"
   function goToAboutSection() {
-    currentSection = 2;
+    currentSection = aboutSection;
     showcaseSection.classList.remove("fullscreen");
     heroSection.classList.remove("fade");
     aboutSection.classList.add("visible");
     servicesSection.classList.remove("visible");
+    jewelrySection.classList.remove("visible");
+    partnerSection.classList.remove("visible");
+
+    // Скрываем элементы сначала
+    infoText.style.opacity = "0";
+    mainNav.style.opacity = "0";
+    scrollIndicator.classList.add("hidden");
+
     // Показываем элементы с задержкой
     setTimeout(() => {
       infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
-    }, scrollDelay);
+    }, 2000);
     updateActiveNavItem();
     updateCompanyInfo();
   }
 
   // Функция для перехода к секции "Производство и сервис"
   function goToServicesSection() {
-    currentSection = 3;
+    currentSection = servicesSection;
     showcaseSection.classList.remove("fullscreen");
     heroSection.classList.remove("fade");
     aboutSection.classList.remove("visible");
     servicesSection.classList.add("visible");
+    jewelrySection.classList.remove("visible");
+    partnerSection.classList.remove("visible");
+
+    // Скрываем элементы сначала
+    infoText.style.opacity = "0";
+    mainNav.style.opacity = "0";
+    scrollIndicator.classList.add("hidden");
+
     // Показываем элементы с задержкой
     setTimeout(() => {
       infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
-    }, scrollDelay);
+    }, 2000);
     updateActiveNavItem();
     updateCompanyInfo();
+  }
+
+  // Функция для перехода к секции "Ювелирные изделия"
+  function goToJewelrySection() {
+    currentSection = jewelrySection;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.remove("fade");
+    aboutSection.classList.remove("visible");
+    servicesSection.classList.remove("visible");
+    jewelrySection.classList.add("visible");
+    partnerSection.classList.remove("visible");
+
+    // Скрываем элементы сначала
+    infoText.style.opacity = "0";
+    mainNav.style.opacity = "0";
+    scrollIndicator.classList.add("hidden");
+
+    // Показываем элементы с задержкой
+    setTimeout(() => {
+      infoText.style.opacity = "1";
+      mainNav.style.opacity = "1";
+      scrollIndicator.classList.remove("hidden");
+    }, 2000);
+    updateActiveNavItem();
+    updateCompanyInfo();
+  }
+
+  // Функция для перехода к секции "Партнерская программа"
+  function goToPartnerSection() {
+    currentSection = partnerSection;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.add("hidden");
+    aboutSection.classList.remove("visible");
+    servicesSection.classList.remove("visible");
+    jewelrySection.classList.remove("visible");
+    partnerSection.classList.add("visible");
+
+    // Скрываем элементы сначала
+    infoText.style.opacity = "0";
+    mainNav.style.opacity = "0";
+    scrollIndicator.classList.add("hidden");
+
+    // Показываем элементы с задержкой
+    setTimeout(() => {
+      infoText.style.opacity = "1";
+      mainNav.style.opacity = "1";
+      scrollIndicator.classList.remove("hidden");
+    }, 2000);
+    updateActiveNavItem();
+    updateCompanyInfo();
+  }
+
+  // Функция для скрытия главной секции
+  function hideHeroSection() {
+    heroSection.style.display = "none";
+  }
+
+  // Функция для показа главной секции
+  function showHeroSection() {
+    heroSection.style.display = "block";
+    heroSection.classList.remove("hidden");
   }
 
   // Функция для обработки скролла
@@ -122,47 +211,50 @@ document.addEventListener("DOMContentLoaded", () => {
     lastScrollTime = currentTime;
 
     // Определяем направление скролла
-    if (e.deltaY > 0 && currentSection < 3) {
+    if (e.deltaY > 0) {
       // Скролл вниз
-      currentSection++;
-
-      if (currentSection === 1) {
-        // Разворачиваем картинку
+      if (!currentSection) {
         isFullscreen = true;
         showcaseSection.classList.add("fullscreen");
         heroSection.classList.add("fade");
-        // Скрываем элементы
         infoText.style.opacity = "0";
         mainNav.style.opacity = "0";
         scrollIndicator.classList.add("hidden");
+        currentSection = showcaseSection;
         updateCompanyInfo();
-      } else if (currentSection === 2) {
+      } else if (currentSection === showcaseSection) {
         goToAboutSection();
-      } else if (currentSection === 3) {
+        hideHeroSection();
+      } else if (currentSection === aboutSection) {
         goToServicesSection();
+      } else if (currentSection === servicesSection) {
+        goToJewelrySection();
+      } else if (currentSection === jewelrySection) {
+        goToPartnerSection();
       }
-    } else if (e.deltaY < 0 && currentSection > 0) {
+    } else if (e.deltaY < 0) {
       // Скролл вверх
-      currentSection--;
-
-      if (currentSection === 0) {
-        goToHomeSection();
-      } else if (currentSection === 1) {
-        // Возвращаем картинку в полноэкранный режим
-        isFullscreen = true;
-        showcaseSection.classList.add("fullscreen");
-        heroSection.classList.add("fade");
-        // Скрываем элементы
-        infoText.style.opacity = "0";
-        mainNav.style.opacity = "0";
-        scrollIndicator.classList.add("hidden");
-        updateCompanyInfo();
-      } else if (currentSection === 2) {
+      if (currentSection === partnerSection) {
+        goToJewelrySection();
+        showHeroSection();
+      } else if (currentSection === jewelrySection) {
+        goToServicesSection();
+      } else if (currentSection === servicesSection) {
         goToAboutSection();
+      } else if (currentSection === aboutSection) {
+        goToHomeSection();
+      } else if (currentSection === showcaseSection) {
+        isFullscreen = false;
+        showcaseSection.classList.remove("fullscreen");
+        heroSection.classList.remove("fade");
+        infoText.style.opacity = "1";
+        mainNav.style.opacity = "1";
+        scrollIndicator.classList.remove("hidden");
+        currentSection = null;
+        updateCompanyInfo();
       }
     }
 
-    // Сбрасываем флаг скролла после задержки
     setTimeout(() => {
       isScrolling = false;
     }, scrollDelay);
@@ -180,8 +272,10 @@ document.addEventListener("DOMContentLoaded", () => {
       heroSection.classList.remove("fade");
       aboutSection.classList.remove("visible");
       servicesSection.classList.remove("visible");
+      jewelrySection.classList.remove("visible");
+      partnerSection.classList.remove("visible");
       isFullscreen = false;
-      currentSection = 0;
+      currentSection = showcaseSection;
       document.body.style.overflow = "auto";
       if (scrollIndicator) {
         scrollIndicator.style.display = "none";
@@ -258,13 +352,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // Обработка клика по пунктам меню
   navItems.forEach((item) => {
     item.addEventListener("click", (e) => {
-      if (item.textContent.includes("О нас")) {
-        e.preventDefault();
+      e.preventDefault();
+      const section = item.getAttribute("data-section");
+
+      if (item.classList.contains("contacts")) {
+        // Открываем модальное окно контактов
+        const modal = document.getElementById("modal-contacts");
+        const overlay = document.querySelector(".modal-overlay");
+        if (modal && overlay) {
+          modal.classList.add("active");
+          overlay.classList.add("active");
+        }
+      } else if (section === "about") {
         goToAboutSection();
-      } else if (item.textContent.includes("Производство")) {
-        e.preventDefault();
+      } else if (section === "services") {
         goToServicesSection();
+      } else if (section === "jewelry") {
+        goToJewelrySection();
+      } else if (section === "partner") {
+        goToPartnerSection();
       }
+
+      // Добавляем класс active к активному пункту меню
+      navItems.forEach((nav) => nav.classList.remove("active"));
+      item.classList.add("active");
     });
   });
 
@@ -338,17 +449,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Свайп вверх
     if (swipeDistance > 0) {
-      if (currentSection === 0) {
+      if (currentSection === showcaseSection) {
         goToAboutSection();
-      } else if (currentSection === 2) {
+      } else if (currentSection === aboutSection) {
         goToServicesSection();
+      } else if (currentSection === servicesSection) {
+        goToJewelrySection();
+      } else if (currentSection === jewelrySection) {
+        goToPartnerSection();
       }
     }
     // Свайп вниз
     else if (swipeDistance < 0) {
-      if (currentSection === 3) {
+      if (currentSection === partnerSection) {
+        goToJewelrySection();
+      } else if (currentSection === jewelrySection) {
+        goToServicesSection();
+      } else if (currentSection === servicesSection) {
         goToAboutSection();
-      } else if (currentSection === 2) {
+      } else if (currentSection === aboutSection) {
         goToHomeSection();
       }
     }
@@ -360,11 +479,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Функция для возврата на главную
   function goToHomeSection() {
-    currentSection = 0;
+    currentSection = null;
+    isFullscreen = false;
     showcaseSection.classList.remove("fullscreen");
     heroSection.classList.remove("fade");
     aboutSection.classList.remove("visible");
     servicesSection.classList.remove("visible");
+    jewelrySection.classList.remove("visible");
+    partnerSection.classList.remove("visible");
+    infoText.style.opacity = "1";
+    mainNav.style.opacity = "1";
+    scrollIndicator.classList.remove("hidden");
     updateActiveNavItem();
     updateCompanyInfo();
   }
@@ -378,7 +503,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("touchend", handleTouchEnd);
 
     // Обновляем стили секций для мобильной версии
-    const sections = [heroSection, aboutSection, servicesSection];
+    const sections = [
+      heroSection,
+      aboutSection,
+      servicesSection,
+      jewelrySection,
+      partnerSection,
+    ];
     sections.forEach((section) => {
       if (section) {
         section.style.position = "fixed";
@@ -408,5 +539,82 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       document.addEventListener("touchend", handleTouchEnd);
     }
+  });
+
+  // Обработка модальных окон
+  const modalOverlay = document.querySelector(".modal-overlay");
+  const modals = document.querySelectorAll(".modal");
+  const closeButtons = document.querySelectorAll(".modal-close");
+  const serviceCards = document.querySelectorAll(".services-card");
+
+  // Открытие модального окна
+  serviceCards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const modalId = `modal-${card.dataset.modal}`;
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modalOverlay.classList.add("active");
+        modal.classList.add("active");
+      }
+    });
+  });
+
+  // Закрытие модального окна при клике на крестик
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      modalOverlay.classList.remove("active");
+      modals.forEach((modal) => modal.classList.remove("active"));
+    });
+  });
+
+  // Закрытие модального окна при клике на оверлей
+  modalOverlay.addEventListener("click", () => {
+    modalOverlay.classList.remove("active");
+    modals.forEach((modal) => modal.classList.remove("active"));
+  });
+
+  // Закрытие модального окна при нажатии Esc
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.querySelectorAll(".modal.active").forEach((modal) => {
+        modal.classList.remove("active");
+      });
+      document.querySelector(".modal-overlay").classList.remove("active");
+    }
+  });
+
+  // Обработчики для модальных окон партнерской программы
+  document.querySelectorAll(".partner-block").forEach((block) => {
+    block.addEventListener("click", () => {
+      const modalId = block.getAttribute("data-modal");
+      if (modalId === "download-presentation") {
+        // Здесь будет логика для скачивания презентации
+        // Пример:
+        // window.location.href = 'path/to/presentation.pdf';
+        return;
+      }
+
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add("active");
+        document.querySelector(".modal-overlay").classList.add("active");
+      }
+    });
+  });
+
+  // Закрытие модальных окон партнерской программы
+  document.querySelectorAll(".modal-close").forEach((closeBtn) => {
+    closeBtn.addEventListener("click", () => {
+      closeBtn.closest(".modal").classList.remove("active");
+      document.querySelector(".modal-overlay").classList.remove("active");
+    });
+  });
+
+  // Закрытие по клику на оверлей
+  document.querySelector(".modal-overlay").addEventListener("click", () => {
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
   });
 });
