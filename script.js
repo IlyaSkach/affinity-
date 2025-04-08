@@ -617,4 +617,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.querySelector(".modal-overlay").classList.remove("active");
   });
+
+  // Слайдер в секции "О нас"
+  const slider = document.querySelector(".about-slider");
+  if (!slider) return;
+
+  const slides = slider.querySelectorAll(".about-slide");
+  const dots = slider.querySelectorAll(".slider-dot");
+  const prevBtn = slider.querySelector(".slider-prev");
+  const nextBtn = slider.querySelector(".slider-next");
+
+  let currentSlide = 0;
+
+  // Инициализация слайдера
+  function initSlider() {
+    slides[0].classList.add("active");
+    dots[0].classList.add("active");
+  }
+
+  // Переход к следующему слайду
+  function nextSlide() {
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+
+    currentSlide = (currentSlide + 1) % slides.length;
+
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+  }
+
+  // Переход к предыдущему слайду
+  function prevSlide() {
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+  }
+
+  // Обработчики событий
+  nextBtn.addEventListener("click", nextSlide);
+  prevBtn.addEventListener("click", prevSlide);
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      slides[currentSlide].classList.remove("active");
+      dots[currentSlide].classList.remove("active");
+
+      currentSlide = index;
+
+      slides[currentSlide].classList.add("active");
+      dots[currentSlide].classList.add("active");
+    });
+  });
+
+  // Автоматическое переключение слайдов
+  let slideInterval = setInterval(nextSlide, 5000);
+
+  // Остановка автопереключения при наведении
+  slider.addEventListener("mouseenter", () => {
+    clearInterval(slideInterval);
+  });
+
+  // Возобновление автопереключения при уходе мыши
+  slider.addEventListener("mouseleave", () => {
+    slideInterval = setInterval(nextSlide, 5000);
+  });
+
+  // Инициализация слайдера
+  initSlider();
 });
