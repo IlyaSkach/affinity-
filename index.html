@@ -18,26 +18,25 @@
 		</button>
 
 		<nav class="main-nav">
+			<button class="consultation-btn">Запросить консультацию</button>
 			<a href="#" class="nav-item" data-section="about">О нас</a>
 			<a href="#" class="nav-item" data-section="services">Производство и сервис</a>
 			<a href="#" class="nav-item" data-section="jewelry">Ювелирный мерч</a>
 			<a href="#" class="nav-item" data-section="partner">Партнерская программа</a>
-			<a href="#" class="nav-item contacts">Контакты</a>
+			<a href="#" class="nav-item" data-section="contacts">Консультация</a>
+			<a href="#" class="nav-item contacts-modal">Контакты</a>
 		</nav>
 
 		<div class="overlay"></div>
 
 		<section class="hero-section">
 			<div class="hero-content">
-				<!-- <h1 class="hero-title">Affinity</h1>
-				<p class="hero-subtitle">Мы работаем с драгоценными металлами</p> -->
-				<button class="consultation-btn">Запросить консультацию</button>
 			</div>
 		</section>
 
 		<section class="showcase-section">
 			<video class="product-image" autoplay muted loop playsinline>
-				<source src="Images/promo3.mp4" type="video/mp4">
+				<source src="Images/promomain.mp4" type="video/mp4">
 				Ваш браузер не поддерживает видео
 			</video>
 		</section>
@@ -120,7 +119,8 @@
 				</video>
 			</div>
 			<div class="services-content">
-				<!-- <h2>Производство и сервис</h2> -->
+				<h1 class="hero-title">Affinity</h1>
+				<p class="hero-subtitle">Мы работаем с драгоценными металлами</p>
 				<div class="services-grid">
 					<div class="services-card" data-modal="materials">
 						<div class="services-header">
@@ -258,23 +258,19 @@
 				<!-- <h2>Ювелирный мерч</h2> -->
 				<div class="jewelry-grid">
 					<div class="jewelry-card">
-						<h3>Преимущества фирменного стиля и мерча</h3>
-						<p>Мерч - атрибутика вашего бренда, с элементами вашего фирменного стиля. Используется для повышения
-							узнаваемости бренда, увеличения лояльности аудитории и тд.</p>
-						<ul>
-							<li>Разрабатываем линейки украшений для компаний и брендов</li>
-							<li>Используем золото, серебро и драгоценные камни высшего качества</li>
-							<li>Создаем премиальные подарочные наборы с фирменной упаковкой</li>
-						</ul>
-					</div>
-					<div class="jewelry-card">
-						<h3>Персональный дизайн и упаковка</h3>
-						<p>Персональный дизайн является отличительной чертой нашей студии, только с помощью персонализации мы
-							попадаем в самое сердечко вашей аудитории.</p>
+						<h3>Персонализированная упаковка</h3>
 						<p>Вместе с дизайном мы создаём проект персональной упаковки, на которую наносим ваше лого или любое
 							изображение на ваше усмотрение.</p>
 						<p>Так же возможно выбрать несколько упаковок, которые различаются по материалу, качеству и размеру.</p>
 						<p class="note">* Стоимость упаковки считается дополнительно и входит в себестоимость изделий.</p>
+						<p class="note">Себестоимость - затраты на стороне производителя</p>
+					</div>
+					<div class="jewelry-card">
+						<h3>Что такое мерч?</h3>
+						<p>Мерч - атрибутика вашего бренда, с элементами вашего фирменного стиля. Используется для повышения
+							узнаваемости бренда, увеличения лояльности аудитории и тд.</p>
+						<p>Персональный дизайн является отличительной чертой нашей студии, только с помощью персонализации мы
+							попадаем в самое сердечко вашей аудитории.</p>
 						<p>Наши художники и 3D-модельеры помогут реализовать ваши любые идеи</p>
 					</div>
 				</div>
@@ -291,20 +287,26 @@
 				<!-- <h2>Партнерская программа</h2> -->
 				<div class="partner-blocks">
 					<div class="partner-block" data-modal="modal-partner-advantages">
-						<h3>Преимущества партнерской коллаборации</h3>
+						<h3>Что входит в маркетинг.</h3>
 					</div>
 					<div class="partner-block" data-modal="modal-partner-who">
-						<h3>Кто может стать партнером</h3>
+						<h3>Вложение для старта</h3>
 					</div>
 					<div class="partner-block" data-modal="modal-partner-features">
-						<h3>Особенности партнерской коллаборации (маркетинговое сопровождение, ценообразование, формирование заказа)
+						<h3>Как происходит заказ?</h3>
 						</h3>
 					</div>
-					<div class="partner-block" data-modal="download-presentation">
-						<h3>Как мы работаем (скачать презентацию)</h3>
+					<div class="partner-block" data-modal="modal-partner-copyright">
+						<h3>Что с авторским правом?</h3>
+					</div>
+					<div class="partner-block" data-modal="modal-partner-corrections">
+						<h3>Правки и корректировки</h3>
 					</div>
 					<div class="partner-block" data-modal="modal-partner-examples">
-						<h3>Примеры совместных проектов с партнерами</h3>
+						<h3>Можем ли попасть к вам на производство или в офис?</h3>
+					</div>
+					<div class="partner-block border" data-modal="download-presentation">
+						<h3>Как мы работаем (скачать презентацию)</h3>
 					</div>
 				</div>
 			</div>
@@ -313,7 +315,7 @@
 		<!-- Модальные окна для партнерской программы -->
 		<div class="modal" id="modal-partner-advantages">
 			<div class="modal-header">
-				<h3 class="modal-title">Преимущества партнерской коллаборации</h3>
+				<h3 class="modal-title">Что входит в маркетинг.</h3>
 				<button class="modal-close">&times;</button>
 			</div>
 			<div class="modal-content">
@@ -328,7 +330,7 @@
 
 		<div class="modal" id="modal-partner-who">
 			<div class="modal-header">
-				<h3 class="modal-title">Кто может стать партнером</h3>
+				<h3 class="modal-title">Вложение для старта</h3>
 				<button class="modal-close">&times;</button>
 			</div>
 			<div class="modal-content">
@@ -342,11 +344,10 @@
 
 		<div class="modal" id="modal-partner-features">
 			<div class="modal-header">
-				<h3 class="modal-title">Особенности партнерской коллаборации</h3>
+				<h3 class="modal-title">Как происходит заказ?</h3>
 				<button class="modal-close">&times;</button>
 			</div>
 			<div class="modal-content">
-				<h4>Как происходит заказ?</h4>
 				<ul>
 					<li>Мы подписываем договор с зафиксированными условиями сотрудничества</li>
 					<li>Согласовываем процесс заказа</li>
@@ -370,7 +371,7 @@
 
 		<div class="modal" id="modal-partner-examples">
 			<div class="modal-header">
-				<h3 class="modal-title">Примеры совместных проектов с партнерами</h3>
+				<h3 class="modal-title">Можем ли попасть к вам на производство или в офис?</h3>
 				<button class="modal-close">&times;</button>
 			</div>
 			<div class="modal-content">
@@ -378,6 +379,40 @@
 					хотите убедиться в качестве наших изделий, то можем сделать персональный пилотный заказ вашего мерча, который
 					станет основой для нашей программы.</p>
 				<p>Для всего остального используем ВКС или выезды персонального менеджера на территорию Партнёра.</p>
+			</div>
+		</div>
+
+		<!-- Новые модальные окна для партнерской программы -->
+		<div class="modal" id="modal-partner-copyright">
+			<div class="modal-header">
+				<h3 class="modal-title">Что с авторским правом?</h3>
+				<button class="modal-close">&times;</button>
+			</div>
+			<div class="modal-content">
+				<p>Авторское право на дизайн изделий остается за Affinity.</p>
+				<p>Авторское право на изготовление остается за Партнером.</p>
+				<p>Проще говоря, Мы не можем без вашего согласия производить и продавать изделия. Вы без нашего согласия не
+					можете изготовить данный дизайн в любой другой ювелирной компании.</p>
+				<p>Предусмотрен вариант выкупа авторского права, когда Партнер хочет изготовить только дизайн у нас или начать
+					производство в сторонней организации. Стоимость рассчитывается по запросу индивидуально. Зависит от сложности
+					дизайна и количества лотов, которые необходимо выкупить.</p>
+			</div>
+		</div>
+
+		<div class="modal" id="modal-partner-corrections">
+			<div class="modal-header">
+				<h3 class="modal-title">Правки и корректировки</h3>
+				<button class="modal-close">&times;</button>
+			</div>
+			<div class="modal-content">
+				<p>Правки и корректировки возможны на следующих этапах:</p>
+				<ul>
+					<li>Дизайн</li>
+					<li>3D моделирование</li>
+				</ul>
+				<p>Всего может быть 4 правки</p>
+				<p>* Правка - внесение изменений в любой элемент изделия с точки зрения формы</p>
+				<p>** В 1 правку может входить до 5 изменений</p>
 			</div>
 		</div>
 
@@ -465,6 +500,45 @@
 		</div>
 	</div>
 
+	<!-- Новая секция "Контакты" -->
+	<section class="contacts-section">
+		<div class="contacts-content">
+			<div class="contacts-form-container">
+				<h2>Форма обратной связи</h2>
+				<form id="contacts-form" class="contacts-form">
+					<div class="form-group">
+						<input type="text" id="contact-name" name="name" placeholder="Имя" required>
+					</div>
+					<div class="form-group">
+						<input type="tel" id="contact-phone" name="phone" placeholder="Телефон" required>
+					</div>
+					<div class="form-group">
+						<input type="text" id="contact-company" name="company" placeholder="Название компании">
+					</div>
+					<div class="form-group">
+						<input type="email" id="contact-email" name="email" placeholder="Рабочая почта">
+					</div>
+					<div class="form-group contact-method">
+						<label>Способ связи:</label>
+						<div class="radio-group">
+							<label class="radio-label">
+								<input type="radio" name="contact-method" value="call" checked>
+								<span class="radio-custom"></span>
+								Звонок
+							</label>
+							<label class="radio-label">
+								<input type="radio" name="contact-method" value="messenger">
+								<span class="radio-custom"></span>
+								Мессенджер
+							</label>
+						</div>
+					</div>
+					<button type="submit" class="submit-btn">Запросить консультацию</button>
+				</form>
+			</div>
+		</div>
+	</section>
+
 	<div class="content-area">
 		<!-- Здесь будет динамически добавляться контент внутренних страниц -->
 	</div>
@@ -474,6 +548,47 @@
 		<div class="swipe-dot active"></div>
 		<div class="swipe-dot"></div>
 		<div class="swipe-dot"></div>
+	</div>
+
+	<!-- Модальное окно для формы обратной связи -->
+	<div class="modal" id="modal-consultation">
+		<div class="modal-header">
+			<h3 class="modal-title">Заказать консультацию</h3>
+			<button class="modal-close">&times;</button>
+		</div>
+		<div class="modal-content">
+			<form id="consultation-form" class="consultation-form">
+				<div class="form-group">
+					<input type="text" id="name" name="name" placeholder="Как к Вам обращаться" required>
+				</div>
+				<div class="form-group">
+					<input type="text" id="contact" name="contact" placeholder="Телефон, почта, WhatsApp или Telegram" required>
+				</div>
+				<button type="submit" class="submit-btn">Заказать консультацию</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Модальное окно для ошибки -->
+	<div class="modal" id="modal-error">
+		<div class="modal-header">
+			<h3 class="modal-title">Ошибка</h3>
+			<button class="modal-close">&times;</button>
+		</div>
+		<div class="modal-content">
+			<p>Пожалуйста, введите все данные</p>
+		</div>
+	</div>
+
+	<!-- Модальное окно успешной отправки -->
+	<div class="modal" id="modal-success">
+		<div class="modal-header">
+			<h3 class="modal-title">Спасибо!</h3>
+			<button class="modal-close">&times;</button>
+		</div>
+		<div class="modal-content">
+			<p><span class="user-name"></span>, мы с Вами свяжемся!</p>
+		</div>
 	</div>
 
 	<script src="script.js"></script>

@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const servicesSection = document.querySelector(".services-section");
   const jewelrySection = document.querySelector(".jewelry-section");
   const partnerSection = document.querySelector(".partner-section");
+  const contactsSection = document.querySelector(".contacts-section");
   const scrollIndicator = document.querySelector(".scroll-indicator");
   const infoText = document.querySelector(".info-text");
 
@@ -74,6 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document
         .querySelector('.nav-item[data-section="partner"]')
         .classList.add("active");
+    } else if (currentSection === contactsSection) {
+      document
+        .querySelector('.nav-item[data-section="contacts"]')
+        .classList.add("active");
     }
   }
 
@@ -98,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     servicesSection.classList.remove("visible");
     jewelrySection.classList.remove("visible");
     partnerSection.classList.remove("visible");
+    contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
     infoText.style.opacity = "0";
@@ -123,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     servicesSection.classList.add("visible");
     jewelrySection.classList.remove("visible");
     partnerSection.classList.remove("visible");
+    contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
     infoText.style.opacity = "0";
@@ -148,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     servicesSection.classList.remove("visible");
     jewelrySection.classList.add("visible");
     partnerSection.classList.remove("visible");
+    contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
     infoText.style.opacity = "0";
@@ -173,6 +181,33 @@ document.addEventListener("DOMContentLoaded", () => {
     servicesSection.classList.remove("visible");
     jewelrySection.classList.remove("visible");
     partnerSection.classList.add("visible");
+    contactsSection.classList.remove("visible");
+
+    // Скрываем элементы сначала
+    infoText.style.opacity = "0";
+    mainNav.style.opacity = "0";
+    scrollIndicator.classList.add("hidden");
+
+    // Показываем элементы с задержкой
+    setTimeout(() => {
+      infoText.style.opacity = "1";
+      mainNav.style.opacity = "1";
+      scrollIndicator.classList.remove("hidden");
+    }, 2000);
+    updateActiveNavItem();
+    updateCompanyInfo();
+  }
+
+  // Функция для перехода к секции "Контакты"
+  function goToContactsSection() {
+    currentSection = contactsSection;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.add("hidden");
+    aboutSection.classList.remove("visible");
+    servicesSection.classList.remove("visible");
+    jewelrySection.classList.remove("visible");
+    partnerSection.classList.remove("visible");
+    contactsSection.classList.add("visible");
 
     // Скрываем элементы сначала
     infoText.style.opacity = "0";
@@ -242,10 +277,14 @@ document.addEventListener("DOMContentLoaded", () => {
         goToJewelrySection();
       } else if (currentSection === jewelrySection) {
         goToPartnerSection();
+      } else if (currentSection === partnerSection) {
+        goToContactsSection();
       }
     } else if (e.deltaY < 0) {
       // Скролл вверх
-      if (currentSection === partnerSection) {
+      if (currentSection === contactsSection) {
+        goToPartnerSection();
+      } else if (currentSection === partnerSection) {
         goToJewelrySection();
         showHeroSection();
       } else if (currentSection === jewelrySection) {
@@ -373,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const section = item.getAttribute("data-section");
 
-      if (item.classList.contains("contacts")) {
+      if (item.classList.contains("contacts-modal")) {
         // Открываем модальное окно контактов
         const modal = document.getElementById("modal-contacts");
         const overlay = document.querySelector(".modal-overlay");
@@ -389,6 +428,8 @@ document.addEventListener("DOMContentLoaded", () => {
         goToJewelrySection();
       } else if (section === "partner") {
         goToPartnerSection();
+      } else if (section === "contacts") {
+        goToContactsSection();
       }
 
       // Добавляем класс active к активному пункту меню
@@ -396,14 +437,6 @@ document.addEventListener("DOMContentLoaded", () => {
       item.classList.add("active");
     });
   });
-
-  // Обработка клика по кнопке "Запросить консультацию"
-  const consultationBtn = document.querySelector(".consultation-btn");
-  if (consultationBtn) {
-    consultationBtn.addEventListener("click", () => {
-      alert("Форма запроса консультации будет добавлена здесь");
-    });
-  }
 
   // Инициализация аккордеона
   const accordionHeaders = document.querySelectorAll(".services-header");
@@ -727,4 +760,131 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Вызываем инициализацию после загрузки DOM
   document.addEventListener("DOMContentLoaded", initServicesAnimation);
+
+  const consultationBtn = document.querySelector(".consultation-btn");
+  const modalConsultation = document.getElementById("modal-consultation");
+  const modalError = document.getElementById("modal-error");
+  const modalSuccess = document.getElementById("modal-success");
+  const consultationForm = document.getElementById("consultation-form");
+
+  // Открытие модального окна консультации
+  consultationBtn.addEventListener("click", function () {
+    modalConsultation.classList.add("active");
+    modalOverlay.classList.add("active");
+  });
+
+  // Закрытие модальных окон
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const modal = this.closest(".modal");
+      if (modal.id !== "modal-consultation") {
+        modal.classList.remove("active");
+        if (!modalConsultation.classList.contains("active")) {
+          modalOverlay.classList.remove("active");
+        }
+      } else {
+        modal.classList.remove("active");
+        modalOverlay.classList.remove("active");
+      }
+    });
+  });
+
+  // Обработка отправки формы
+  consultationForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const contact = document.getElementById("contact").value.trim();
+
+    if (!name || !contact) {
+      modalError.classList.add("active");
+      modalError.style.display = "block";
+      modalError.style.opacity = "1";
+      modalError.style.visibility = "visible";
+      modalOverlay.classList.add("active");
+      return;
+    }
+
+    // Если все поля заполнены
+    modalConsultation.classList.remove("active");
+    modalSuccess.classList.add("active");
+    modalSuccess.style.display = "block";
+    modalSuccess.style.opacity = "1";
+    modalSuccess.style.visibility = "visible";
+
+    // Добавляем имя в сообщение
+    document.querySelector("#modal-success .user-name").textContent = name;
+
+    // Закрыть окно успеха через 3 секунды
+    setTimeout(() => {
+      modalSuccess.classList.remove("active");
+      modalSuccess.style.display = "none";
+      modalSuccess.style.opacity = "0";
+      modalSuccess.style.visibility = "hidden";
+      modalOverlay.classList.remove("active");
+      // Очистить форму
+      consultationForm.reset();
+    }, 3000);
+  });
+
+  // Обработка закрытия окна с ошибкой
+  document
+    .querySelector("#modal-error .modal-close")
+    .addEventListener("click", function () {
+      modalError.classList.remove("active");
+      modalError.style.display = "none";
+      modalError.style.opacity = "0";
+      modalError.style.visibility = "hidden";
+      // НЕ закрываем оверлей и окно консультации
+    });
+
+  // Закрытие по клику на оверлей
+  modalOverlay.addEventListener("click", function () {
+    if (
+      !modalError.classList.contains("active") &&
+      !modalSuccess.classList.contains("active")
+    ) {
+      modalConsultation.classList.remove("active");
+      modalOverlay.classList.remove("active");
+    }
+  });
+
+  // Обработка отправки формы контактов
+  const contactsForm = document.getElementById("contacts-form");
+  if (contactsForm) {
+    contactsForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("contact-name").value;
+      const phone = document.getElementById("contact-phone").value;
+
+      if (!name || !phone) {
+        const modalError = document.getElementById("modal-error");
+        if (modalError) {
+          modalError.classList.add("active");
+          setTimeout(() => {
+            modalError.classList.remove("active");
+          }, 3000);
+        }
+        return;
+      }
+
+      // Здесь будет логика отправки формы
+
+      // Показываем сообщение об успешной отправке
+      const modalSuccess = document.getElementById("modal-success");
+      if (modalSuccess) {
+        const userNameSpan = modalSuccess.querySelector(".user-name");
+        if (userNameSpan) {
+          userNameSpan.textContent = name;
+        }
+        modalSuccess.classList.add("active");
+
+        // Закрываем модальное окно через 3 секунды
+        setTimeout(() => {
+          modalSuccess.classList.remove("active");
+          contactsForm.reset();
+        }, 3000);
+      }
+    });
+  }
 });
