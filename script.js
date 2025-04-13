@@ -317,11 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, scrollDelay);
   }
 
-  // Добавляем обработчик скролла только для десктопа
-  if (window.innerWidth > 768) {
-    window.addEventListener("wheel", handleScroll, { passive: true });
-  }
-
   // Сброс стилей для мобильных устройств
   function resetMobileStyles() {
     if (window.innerWidth <= 768) {
@@ -331,6 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
       servicesSection.classList.remove("visible");
       jewelrySection.classList.remove("visible");
       partnerSection.classList.remove("visible");
+      contactsSection.classList.remove("visible");
       isFullscreen = false;
       currentSection = showcaseSection;
       document.body.style.overflow = "auto";
@@ -353,6 +349,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Инициализация при загрузке
   resetMobileStyles();
+
+  // Добавляем обработчик скролла только для десктопа
+  if (window.innerWidth > 768) {
+    window.addEventListener("wheel", handleScroll, { passive: true });
+  }
+
+  // Обновляем обработчик изменения размера окна для скролла
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      window.addEventListener("wheel", handleScroll, { passive: true });
+    } else {
+      window.removeEventListener("wheel", handleScroll);
+    }
+  });
 
   // Переключение меню
   function toggleMenu() {
@@ -406,21 +416,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Обработка клика по пунктам меню
+  // Добавляем обработчики событий для навигационных ссылок
   navItems.forEach((item) => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
-      const section = item.getAttribute("data-section");
+
+      // Проверяем, является ли элемент ссылкой на главную
+      if (item.classList.contains("home-link")) {
+        goToHomeSection();
+        return;
+      }
 
       if (item.classList.contains("contacts-modal")) {
-        // Открываем модальное окно контактов
-        const modal = document.getElementById("modal-contacts");
-        const overlay = document.querySelector(".modal-overlay");
-        if (modal && overlay) {
-          modal.classList.add("active");
-          overlay.classList.add("active");
-        }
-      } else if (section === "about") {
+        document.getElementById("modal-contacts").classList.add("active");
+        document.querySelector(".modal-overlay").classList.add("active");
+        return;
+      }
+
+      // Если это кнопка бургер-меню или другая кнопка, просто выходим
+      if (!item.hasAttribute("data-section")) return;
+
+      const section = item.getAttribute("data-section");
+
+      if (section === "about") {
         goToAboutSection();
       } else if (section === "services") {
         goToServicesSection();
@@ -432,9 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
         goToContactsSection();
       }
 
-      // Добавляем класс active к активному пункту меню
-      navItems.forEach((nav) => nav.classList.remove("active"));
-      item.classList.add("active");
+      if (window.innerWidth <= 768) {
+        closeMenu();
+      }
     });
   });
 
@@ -508,11 +526,15 @@ document.addEventListener("DOMContentLoaded", () => {
         goToJewelrySection();
       } else if (currentSection === jewelrySection) {
         goToPartnerSection();
+      } else if (currentSection === partnerSection) {
+        goToContactsSection();
       }
     }
     // Свайп вниз
     else if (swipeDistance < 0) {
-      if (currentSection === partnerSection) {
+      if (currentSection === contactsSection) {
+        goToPartnerSection();
+      } else if (currentSection === partnerSection) {
         goToJewelrySection();
       } else if (currentSection === jewelrySection) {
         goToServicesSection();
@@ -534,10 +556,12 @@ document.addEventListener("DOMContentLoaded", () => {
     isFullscreen = false;
     showcaseSection.classList.remove("fullscreen");
     heroSection.classList.remove("fade");
+    heroSection.classList.remove("hidden");
     aboutSection.classList.remove("visible");
     servicesSection.classList.remove("visible");
     jewelrySection.classList.remove("visible");
     partnerSection.classList.remove("visible");
+    contactsSection.classList.remove("visible");
     infoText.style.opacity = "1";
     mainNav.style.opacity = "1";
     scrollIndicator.classList.remove("hidden");
@@ -560,6 +584,7 @@ document.addEventListener("DOMContentLoaded", () => {
       servicesSection,
       jewelrySection,
       partnerSection,
+      contactsSection,
     ];
     sections.forEach((section) => {
       if (section) {
