@@ -643,41 +643,168 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCompanyInfo();
   }
 
-  // Инициализация обработчиков для свайпа на мобильных устройствах
-  function initMobileSwipe() {
-    // Проверяем, поддерживается ли сенсорный ввод
-    if ("ontouchstart" in window) {
-      // Добавляем индикатор свайпа для мобильных устройств
-      if (!document.querySelector(".swipe-indicator")) {
-        const swipeIndicator = document.createElement("div");
-        swipeIndicator.className = "swipe-indicator";
+  // Функция для добавления нижней мобильной навигации вместо свайпов
+  function initMobileBottomNav() {
+    // Проверяем ширину экрана
+    if (window.innerWidth <= 768) {
+      // Проверяем, существует ли уже панель
+      if (!document.querySelector(".mobile-nav-panel")) {
+        // Создаем панель навигации
+        const navPanel = document.createElement("div");
+        navPanel.className = "mobile-nav-panel";
 
-        // Создаем точки для каждой секции
-        const sections = ["home", "about", "services", "jewelry", "partner"];
-        sections.forEach((section) => {
-          const dot = document.createElement("div");
-          dot.className = "swipe-dot";
-          dot.setAttribute("data-section", section);
-          if (section === "home") dot.classList.add("active");
-          swipeIndicator.appendChild(dot);
+        // Массив с данными для кнопок (секция, иконка, название)
+        const navButtons = [
+          { section: "home", icon: "🏠", label: "Главная" },
+          { section: "about", icon: "ℹ️", label: "О нас" },
+          { section: "services", icon: "🛠️", label: "Услуги" },
+          { section: "jewelry", icon: "💎", label: "Мерч" },
+          { section: "partner", icon: "🤝", label: "Партнерам" },
+        ];
+
+        // Создаем кнопки для каждой секции
+        navButtons.forEach((button) => {
+          const navButton = document.createElement("a");
+          navButton.href = "#";
+          navButton.className = "mobile-nav-button";
+          navButton.setAttribute("data-section", button.section);
+
+          // Если это главная страница и мы на ней, добавляем класс active
+          if (button.section === "home" && !currentSection) {
+            navButton.classList.add("active");
+          }
+
+          const navIcon = document.createElement("span");
+          navIcon.className = "mobile-nav-icon";
+          navIcon.textContent = button.icon;
+
+          const navLabel = document.createElement("span");
+          navLabel.className = "mobile-nav-label";
+          navLabel.textContent = button.label;
+
+          navButton.appendChild(navIcon);
+          navButton.appendChild(navLabel);
+          navPanel.appendChild(navButton);
+
+          // Добавляем обработчик события
+          navButton.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // Убираем класс active у всех кнопок
+            document.querySelectorAll(".mobile-nav-button").forEach((btn) => {
+              btn.classList.remove("active");
+            });
+
+            // Добавляем класс active текущей кнопке
+            this.classList.add("active");
+
+            // Переходим к соответствующей секции
+            const section = this.getAttribute("data-section");
+
+            if (section === "home") {
+              goToHomeSection();
+            } else if (section === "about") {
+              goToAboutSection();
+            } else if (section === "services") {
+              goToServicesSection();
+            } else if (section === "jewelry") {
+              goToJewelrySection();
+            } else if (section === "partner") {
+              goToPartnerSection();
+            }
+          });
         });
 
-        document.body.appendChild(swipeIndicator);
+        // Добавляем панель на страницу
+        document.body.appendChild(navPanel);
       }
 
-      // Добавляем обработчики событий touch
-      document.addEventListener("touchstart", handleTouchStart, {
-        passive: false,
-      });
-      document.addEventListener("touchmove", handleTouchMove, {
-        passive: false,
-      });
-      document.addEventListener("touchend", handleTouchEnd, { passive: false });
+      // Отключаем обработчики свайпов, так как теперь используются кнопки
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     }
   }
 
-  // Вызов функции инициализации свайпа
-  initMobileSwipe();
+  // Обновляем активную кнопку в нижней навигации при изменении секции
+  function updateMobileNavButton() {
+    const navButtons = document.querySelectorAll(".mobile-nav-button");
+
+    navButtons.forEach((button) => {
+      button.classList.remove("active");
+
+      const section = button.getAttribute("data-section");
+
+      if (section === "home" && !currentSection) {
+        button.classList.add("active");
+      } else if (section === "about" && currentSection === aboutSection) {
+        button.classList.add("active");
+      } else if (section === "services" && currentSection === servicesSection) {
+        button.classList.add("active");
+      } else if (section === "jewelry" && currentSection === jewelrySection) {
+        button.classList.add("active");
+      } else if (section === "partner" && currentSection === partnerSection) {
+        button.classList.add("active");
+      }
+    });
+  }
+
+  // Обновляем функции для перехода между разделами
+  const originalGoToAboutSection = goToAboutSection;
+  goToAboutSection = function () {
+    originalGoToAboutSection();
+    updateMobileNavButton();
+  };
+
+  const originalGoToServicesSection = goToServicesSection;
+  goToServicesSection = function () {
+    originalGoToServicesSection();
+    updateMobileNavButton();
+  };
+
+  const originalGoToJewelrySection = goToJewelrySection;
+  goToJewelrySection = function () {
+    originalGoToJewelrySection();
+    updateMobileNavButton();
+  };
+
+  const originalGoToPartnerSection = goToPartnerSection;
+  goToPartnerSection = function () {
+    originalGoToPartnerSection();
+    updateMobileNavButton();
+  };
+
+  const originalGoToHomeSection = goToHomeSection;
+  goToHomeSection = function () {
+    originalGoToHomeSection();
+    updateMobileNavButton();
+  };
+
+  // Вызываем функцию инициализации при загрузке страницы
+  initMobileBottomNav();
+
+  // Обновляем при изменении размера окна
+  window.addEventListener("resize", initMobileBottomNav);
+
+  // Обновляем оригинальную функцию инициализации мобильного свайпа
+  // чтобы не создавать свайп-индикатор, так как теперь используются кнопки
+  function initMobileSwipe() {
+    // Проверяем ширину экрана
+    if (window.innerWidth > 768) {
+      // Если не мобильное устройство, используем стандартную функцию
+      if ("ontouchstart" in window) {
+        document.addEventListener("touchstart", handleTouchStart, {
+          passive: false,
+        });
+        document.addEventListener("touchmove", handleTouchMove, {
+          passive: false,
+        });
+        document.addEventListener("touchend", handleTouchEnd, {
+          passive: false,
+        });
+      }
+    }
+  }
 
   // Обработка модальных окон
   const modalOverlay = document.querySelector(".modal-overlay");
