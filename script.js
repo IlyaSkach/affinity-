@@ -49,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Переменные для свайпов
   let touchStartY = 0;
   let touchEndY = 0;
+  let touchStartX = 0;
+  let touchEndX = 0;
   const minSwipeDistance = 50;
   let isSwiping = false;
 
@@ -59,26 +61,52 @@ document.addEventListener("DOMContentLoaded", () => {
       item.classList.remove("active");
     });
 
-    if (currentSection === aboutSection) {
+    // Обновляем свайп-индикаторы для мобильных устройств
+    const swipeDots = document.querySelectorAll(".swipe-dot");
+    swipeDots.forEach((dot) => {
+      dot.classList.remove("active");
+    });
+
+    if (!currentSection) {
+      // Если мы на главной
+      document
+        .querySelector('.swipe-dot[data-section="home"]')
+        ?.classList.add("active");
+    } else if (currentSection === aboutSection) {
       document
         .querySelector('.nav-item[data-section="about"]')
         .classList.add("active");
+      document
+        .querySelector('.swipe-dot[data-section="about"]')
+        ?.classList.add("active");
     } else if (currentSection === servicesSection) {
       document
         .querySelector('.nav-item[data-section="services"]')
         .classList.add("active");
+      document
+        .querySelector('.swipe-dot[data-section="services"]')
+        ?.classList.add("active");
     } else if (currentSection === jewelrySection) {
       document
         .querySelector('.nav-item[data-section="jewelry"]')
         .classList.add("active");
+      document
+        .querySelector('.swipe-dot[data-section="jewelry"]')
+        ?.classList.add("active");
     } else if (currentSection === partnerSection) {
       document
         .querySelector('.nav-item[data-section="partner"]')
         .classList.add("active");
+      document
+        .querySelector('.swipe-dot[data-section="partner"]')
+        ?.classList.add("active");
     } else if (currentSection === contactsSection) {
       document
         .querySelector('.nav-item[data-section="contacts"]')
         .classList.add("active");
+      document
+        .querySelector('.swipe-dot[data-section="contacts"]')
+        ?.classList.add("active");
     }
   }
 
@@ -491,65 +519,109 @@ document.addEventListener("DOMContentLoaded", () => {
     header.setAttribute("aria-expanded", "false");
   });
 
-  // Функция для обработки начала свайпа
+  // Функция для обработки начала касания
   function handleTouchStart(e) {
     touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+    isSwiping = false;
   }
 
-  // Функция для обработки движения при свайпе
+  // Функция для обработки движения пальца
   function handleTouchMove(e) {
-    if (isScrolling) return;
+    if (!touchStartY || !touchStartX) return;
+
     touchEndY = e.touches[0].clientY;
+    touchEndX = e.touches[0].clientX;
+
+    // Определяем направление свайпа (вертикальное или горизонтальное)
+    const yDiff = touchStartY - touchEndY;
+    const xDiff = touchStartX - touchEndX;
+
+    // Если горизонтальный свайп сильнее, чем вертикальный, отключаем обработку
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+      return;
+    }
+
+    // Блокируем прокрутку страницы, чтобы избежать конфликтов
+    e.preventDefault();
+    isSwiping = true;
   }
 
-  // Функция для обработки окончания свайпа
+  // Функция для обработки окончания касания
   function handleTouchEnd() {
-    if (isScrolling || isSwiping) return;
+    if (!touchStartY || !touchEndY || !isSwiping) return;
 
-    const swipeDistance = touchStartY - touchEndY;
-    const currentTime = Date.now();
+    const yDiff = touchStartY - touchEndY;
+    const now = new Date().getTime();
 
-    if (
-      Math.abs(swipeDistance) < minSwipeDistance ||
-      currentTime - lastScrollTime < scrollDelay
-    )
-      return;
+    // Проверяем, прошло ли достаточно времени с последнего свайпа
+    if (now - lastScrollTime < scrollDelay) return;
 
-    isSwiping = true;
-    lastScrollTime = currentTime;
+    // Проверяем расстояние свайпа
+    if (Math.abs(yDiff) < minSwipeDistance) return;
 
-    // Свайп вверх
-    if (swipeDistance > 0) {
-      if (currentSection === showcaseSection) {
-        goToAboutSection();
-      } else if (currentSection === aboutSection) {
-        goToServicesSection();
-      } else if (currentSection === servicesSection) {
-        goToJewelrySection();
-      } else if (currentSection === jewelrySection) {
-        goToPartnerSection();
-      } else if (currentSection === partnerSection) {
-        goToContactsSection();
-      }
+    // Свайп вниз - к предыдущей секции
+    if (yDiff < 0) {
+      handleSwipeDown();
     }
-    // Свайп вниз
-    else if (swipeDistance < 0) {
-      if (currentSection === contactsSection) {
-        goToPartnerSection();
-      } else if (currentSection === partnerSection) {
-        goToJewelrySection();
-      } else if (currentSection === jewelrySection) {
-        goToServicesSection();
-      } else if (currentSection === servicesSection) {
-        goToAboutSection();
-      } else if (currentSection === aboutSection) {
-        goToHomeSection();
-      }
+    // Свайп вверх - к следующей секции
+    else if (yDiff > 0) {
+      handleSwipeUp();
     }
 
-    setTimeout(() => {
-      isSwiping = false;
-    }, scrollDelay);
+    // Обновляем время последнего свайпа
+    lastScrollTime = now;
+
+    // Сбрасываем значения
+    touchStartY = 0;
+    touchEndY = 0;
+    touchStartX = 0;
+    touchEndX = 0;
+  }
+
+  // Функция для обработки свайпа вверх (переход к следующей секции)
+  function handleSwipeUp() {
+    // Если текущая секция не установлена (домашняя страница)
+    if (!currentSection || currentSection === showcaseSection) {
+      goToAboutSection();
+    }
+    // Если текущая секция "О нас"
+    else if (currentSection === aboutSection) {
+      goToServicesSection();
+    }
+    // Если текущая секция "Производство и сервис"
+    else if (currentSection === servicesSection) {
+      goToJewelrySection();
+    }
+    // Если текущая секция "Ювелирный мерч"
+    else if (currentSection === jewelrySection) {
+      goToPartnerSection();
+    }
+    // Если текущая секция "Партнерская программа"
+    else if (currentSection === partnerSection) {
+      // Можно сделать циклический переход или ничего не делать
+      // goToHomeSection();
+    }
+  }
+
+  // Функция для обработки свайпа вниз (переход к предыдущей секции)
+  function handleSwipeDown() {
+    // Если текущая секция "О нас"
+    if (currentSection === aboutSection) {
+      goToHomeSection();
+    }
+    // Если текущая секция "Производство и сервис"
+    else if (currentSection === servicesSection) {
+      goToAboutSection();
+    }
+    // Если текущая секция "Ювелирный мерч"
+    else if (currentSection === jewelrySection) {
+      goToServicesSection();
+    }
+    // Если текущая секция "Партнерская программа"
+    else if (currentSection === partnerSection) {
+      goToJewelrySection();
+    }
   }
 
   // Функция для возврата на главную
@@ -571,53 +643,41 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCompanyInfo();
   }
 
-  // Добавляем обработчики свайпов для мобильных устройств
-  if (window.innerWidth <= 768) {
-    document.addEventListener("touchstart", handleTouchStart, {
-      passive: true,
-    });
-    document.addEventListener("touchmove", handleTouchMove, { passive: true });
-    document.addEventListener("touchend", handleTouchEnd);
+  // Инициализация обработчиков для свайпа на мобильных устройствах
+  function initMobileSwipe() {
+    // Проверяем, поддерживается ли сенсорный ввод
+    if ("ontouchstart" in window) {
+      // Добавляем индикатор свайпа для мобильных устройств
+      if (!document.querySelector(".swipe-indicator")) {
+        const swipeIndicator = document.createElement("div");
+        swipeIndicator.className = "swipe-indicator";
 
-    // Обновляем стили секций для мобильной версии
-    const sections = [
-      heroSection,
-      aboutSection,
-      servicesSection,
-      jewelrySection,
-      partnerSection,
-      contactsSection,
-    ];
-    sections.forEach((section) => {
-      if (section) {
-        section.style.position = "fixed";
-        section.style.width = "100%";
-        section.style.height = "100vh";
-        section.style.overflow = "hidden";
+        // Создаем точки для каждой секции
+        const sections = ["home", "about", "services", "jewelry", "partner"];
+        sections.forEach((section) => {
+          const dot = document.createElement("div");
+          dot.className = "swipe-dot";
+          dot.setAttribute("data-section", section);
+          if (section === "home") dot.classList.add("active");
+          swipeIndicator.appendChild(dot);
+        });
+
+        document.body.appendChild(swipeIndicator);
       }
-    });
-  }
 
-  // Обновляем обработчик изменения размера окна
-  window.addEventListener("resize", () => {
-    resetMobileStyles();
-    if (window.innerWidth > 768) {
-      closeMenu();
-      // Удаляем обработчики свайпов
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-    } else {
-      // Добавляем обработчики свайпов
+      // Добавляем обработчики событий touch
       document.addEventListener("touchstart", handleTouchStart, {
-        passive: true,
+        passive: false,
       });
       document.addEventListener("touchmove", handleTouchMove, {
-        passive: true,
+        passive: false,
       });
-      document.addEventListener("touchend", handleTouchEnd);
+      document.addEventListener("touchend", handleTouchEnd, { passive: false });
     }
-  });
+  }
+
+  // Вызов функции инициализации свайпа
+  initMobileSwipe();
 
   // Обработка модальных окон
   const modalOverlay = document.querySelector(".modal-overlay");
@@ -919,4 +979,25 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Добавляем обработчики кликов для индикаторов свайпа
+  document.querySelectorAll(".swipe-dot").forEach((dot) => {
+    dot.addEventListener("click", function () {
+      const section = this.getAttribute("data-section");
+
+      if (section === "home") {
+        goToHomeSection();
+      } else if (section === "about") {
+        goToAboutSection();
+      } else if (section === "services") {
+        goToServicesSection();
+      } else if (section === "jewelry") {
+        goToJewelrySection();
+      } else if (section === "partner") {
+        goToPartnerSection();
+      } else if (section === "contacts") {
+        goToContactsSection();
+      }
+    });
+  });
 });
