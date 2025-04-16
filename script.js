@@ -85,6 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Функция для обновления видимости информации о компании
   function updateCompanyInfo() {
     const companyInfo = document.querySelector(".company-info");
+    if (!companyInfo) return; // Выходим если элемент не найден
+
     if (currentSection === showcaseSection) {
       companyInfo.style.opacity = "1";
       companyInfo.style.visibility = "visible";
@@ -106,13 +108,13 @@ document.addEventListener("DOMContentLoaded", () => {
     contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
-    infoText.style.opacity = "0";
+    if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
     scrollIndicator.classList.add("hidden");
 
     // Показываем элементы с задержкой
     setTimeout(() => {
-      infoText.style.opacity = "1";
+      if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
     }, 2000);
@@ -132,13 +134,13 @@ document.addEventListener("DOMContentLoaded", () => {
     contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
-    infoText.style.opacity = "0";
+    if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
     scrollIndicator.classList.add("hidden");
 
     // Показываем элементы с задержкой
     setTimeout(() => {
-      infoText.style.opacity = "1";
+      if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
     }, 2000);
@@ -158,13 +160,13 @@ document.addEventListener("DOMContentLoaded", () => {
     contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
-    infoText.style.opacity = "0";
+    if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
     scrollIndicator.classList.add("hidden");
 
     // Показываем элементы с задержкой
     setTimeout(() => {
-      infoText.style.opacity = "1";
+      if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
     }, 2000);
@@ -184,13 +186,13 @@ document.addEventListener("DOMContentLoaded", () => {
     contactsSection.classList.remove("visible");
 
     // Скрываем элементы сначала
-    infoText.style.opacity = "0";
+    if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
     scrollIndicator.classList.add("hidden");
 
     // Показываем элементы с задержкой
     setTimeout(() => {
-      infoText.style.opacity = "1";
+      if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
     }, 2000);
@@ -210,13 +212,13 @@ document.addEventListener("DOMContentLoaded", () => {
     contactsSection.classList.add("visible");
 
     // Скрываем элементы сначала
-    infoText.style.opacity = "0";
+    if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
     scrollIndicator.classList.add("hidden");
 
     // Показываем элементы с задержкой
     setTimeout(() => {
-      infoText.style.opacity = "1";
+      if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
     }, 2000);
@@ -252,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isFullscreen = true;
         showcaseSection.classList.add("fullscreen");
         heroSection.classList.add("fade");
-        infoText.style.opacity = "0";
+        if (infoText) infoText.style.opacity = "0";
         mainNav.style.opacity = "0";
         scrollIndicator.classList.add("hidden");
         currentSection = showcaseSection;
@@ -297,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isFullscreen = false;
         showcaseSection.classList.remove("fullscreen");
         heroSection.classList.remove("fade");
-        infoText.style.opacity = "1";
+        if (infoText) infoText.style.opacity = "1";
         mainNav.style.opacity = "1";
         scrollIndicator.classList.remove("hidden");
         currentSection = null;
@@ -333,7 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (scrollIndicator) {
         scrollIndicator.style.display = "none";
       }
-      infoText.style.opacity = "1";
+      if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       updateActiveNavItem();
     } else {
@@ -562,7 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jewelrySection.classList.remove("visible");
     partnerSection.classList.remove("visible");
     contactsSection.classList.remove("visible");
-    infoText.style.opacity = "1";
+    if (infoText) infoText.style.opacity = "1";
     mainNav.style.opacity = "1";
     scrollIndicator.classList.remove("hidden");
     updateActiveNavItem();
@@ -669,6 +671,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // window.location.href = 'path/to/presentation.pdf';
         return;
       }
+
+      // Сначала закрываем все активные модальные окна
+      document.querySelectorAll(".modal.active").forEach((activeModal) => {
+        activeModal.classList.remove("active");
+      });
 
       const modal = document.getElementById(modalId);
       if (modal) {
