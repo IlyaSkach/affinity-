@@ -519,109 +519,36 @@ document.addEventListener("DOMContentLoaded", () => {
     header.setAttribute("aria-expanded", "false");
   });
 
-  // Функция для обработки начала касания
+  // Отключаем обработку свайпов на мобильных устройствах для всего сайта, кроме слайдера
+  function initMobileSwipe() {
+    // Отключаем для мобильных устройств
+    return;
+  }
+
+  // Обработчики сенсорных событий для переключения секций отключены
   function handleTouchStart(e) {
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
-    isSwiping = false;
+    // Функция отключена для переключения секций
+    return;
   }
 
-  // Функция для обработки движения пальца
   function handleTouchMove(e) {
-    if (!touchStartY || !touchStartX) return;
-
-    touchEndY = e.touches[0].clientY;
-    touchEndX = e.touches[0].clientX;
-
-    // Определяем направление свайпа (вертикальное или горизонтальное)
-    const yDiff = touchStartY - touchEndY;
-    const xDiff = touchStartX - touchEndX;
-
-    // Если горизонтальный свайп сильнее, чем вертикальный, отключаем обработку
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-      return;
-    }
-
-    // Блокируем прокрутку страницы, чтобы избежать конфликтов
-    e.preventDefault();
-    isSwiping = true;
+    // Функция отключена для переключения секций
+    return;
   }
 
-  // Функция для обработки окончания касания
   function handleTouchEnd() {
-    if (!touchStartY || !touchEndY || !isSwiping) return;
-
-    const yDiff = touchStartY - touchEndY;
-    const now = new Date().getTime();
-
-    // Проверяем, прошло ли достаточно времени с последнего свайпа
-    if (now - lastScrollTime < scrollDelay) return;
-
-    // Проверяем расстояние свайпа
-    if (Math.abs(yDiff) < minSwipeDistance) return;
-
-    // Свайп вниз - к предыдущей секции
-    if (yDiff < 0) {
-      handleSwipeDown();
-    }
-    // Свайп вверх - к следующей секции
-    else if (yDiff > 0) {
-      handleSwipeUp();
-    }
-
-    // Обновляем время последнего свайпа
-    lastScrollTime = now;
-
-    // Сбрасываем значения
-    touchStartY = 0;
-    touchEndY = 0;
-    touchStartX = 0;
-    touchEndX = 0;
+    // Функция отключена для переключения секций
+    return;
   }
 
-  // Функция для обработки свайпа вверх (переход к следующей секции)
   function handleSwipeUp() {
-    // Если текущая секция не установлена (домашняя страница)
-    if (!currentSection || currentSection === showcaseSection) {
-      goToAboutSection();
-    }
-    // Если текущая секция "О нас"
-    else if (currentSection === aboutSection) {
-      goToServicesSection();
-    }
-    // Если текущая секция "Производство и сервис"
-    else if (currentSection === servicesSection) {
-      goToJewelrySection();
-    }
-    // Если текущая секция "Ювелирный мерч"
-    else if (currentSection === jewelrySection) {
-      goToPartnerSection();
-    }
-    // Если текущая секция "Партнерская программа"
-    else if (currentSection === partnerSection) {
-      // Можно сделать циклический переход или ничего не делать
-      // goToHomeSection();
-    }
+    // Функция отключена для переключения секций
+    return;
   }
 
-  // Функция для обработки свайпа вниз (переход к предыдущей секции)
   function handleSwipeDown() {
-    // Если текущая секция "О нас"
-    if (currentSection === aboutSection) {
-      goToHomeSection();
-    }
-    // Если текущая секция "Производство и сервис"
-    else if (currentSection === servicesSection) {
-      goToAboutSection();
-    }
-    // Если текущая секция "Ювелирный мерч"
-    else if (currentSection === jewelrySection) {
-      goToServicesSection();
-    }
-    // Если текущая секция "Партнерская программа"
-    else if (currentSection === partnerSection) {
-      goToJewelrySection();
-    }
+    // Функция отключена для переключения секций
+    return;
   }
 
   // Функция для возврата на главную
@@ -946,6 +873,51 @@ document.addEventListener("DOMContentLoaded", () => {
     slider.addEventListener("mouseleave", () => {
       slideInterval = setInterval(nextSlide, 5000);
     });
+
+    // Добавляем обработку свайпов для слайдера только в разделе "Ювелирный мерч" на мобильных устройствах
+    if (window.innerWidth <= 768 && slider.closest(".jewelry-section")) {
+      let touchStartX = 0;
+      let touchEndX = 0;
+      const minSwipeDistance = 50;
+
+      slider.addEventListener(
+        "touchstart",
+        function (e) {
+          touchStartX = e.touches[0].clientX;
+        },
+        { passive: true }
+      );
+
+      slider.addEventListener(
+        "touchmove",
+        function (e) {
+          touchEndX = e.touches[0].clientX;
+        },
+        { passive: true }
+      );
+
+      slider.addEventListener(
+        "touchend",
+        function () {
+          const swipeDistance = touchStartX - touchEndX;
+
+          if (Math.abs(swipeDistance) > minSwipeDistance) {
+            if (swipeDistance > 0) {
+              // Свайп влево - переход к следующему слайду
+              nextSlide();
+            } else {
+              // Свайп вправо - переход к предыдущему слайду
+              prevSlide();
+            }
+          }
+
+          // Сбрасываем значения
+          touchStartX = 0;
+          touchEndX = 0;
+        },
+        { passive: true }
+      );
+    }
   }
 
   // Инициализация слайдера после загрузки DOM

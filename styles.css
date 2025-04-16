@@ -76,6 +76,7 @@ body {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 1px;
+  font-family: "Times New Roman", serif;
 }
 
 .home-link:hover {
@@ -557,26 +558,11 @@ body {
 
   /* Индикатор свайпа */
   .swipe-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 1000;
+    display: none; /* Скрываем индикатор свайпа */
   }
 
   .swipe-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-  }
-
-  .swipe-dot.active {
-    background-color: var(--accent-color);
-    transform: scale(1.2);
+    display: none; /* Скрываем точки индикатора свайпа */
   }
 
   .hero-title {
@@ -1463,7 +1449,7 @@ body.no-scroll {
   position: absolute;
   bottom: 5px;
   left: 40px;
-  width: 200px;
+  width: 350px;
   color: var(--menu-gold);
   font-size: 12px;
   text-align: left;
@@ -2059,11 +2045,11 @@ body.no-scroll {
   background-color: var(--bg-color);
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 1100;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  max-height: 90vh;
+  /* max-height: 90vh; */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2831,7 +2817,7 @@ body.no-scroll {
   max-width: 1200px;
   margin: 0 auto;
   padding: 4rem 2rem;
-  min-height: 100vh;
+  /* height: 100vh; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2845,7 +2831,7 @@ body.no-scroll {
   border: 2px solid var(--gold-color);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 .contacts-form-container h2 {
@@ -3025,26 +3011,11 @@ body.no-scroll {
 
   /* Индикаторы свайпа для мобильной версии */
   .swipe-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 100;
+    display: none; /* Скрываем индикатор свайпа */
   }
 
   .swipe-dot {
-    width: 10px;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-  }
-
-  .swipe-dot.active {
-    background-color: var(--menu-gold);
-    transform: scale(1.2);
+    display: none; /* Скрываем точки индикатора свайпа */
   }
 
   /* Улучшенные стили для карточек сервисов на мобильных устройствах */
@@ -3102,72 +3073,23 @@ body.no-scroll {
 /* Улучшенный индикатор свайпа для мобильной версии */
 @media screen and (max-width: 768px) {
   .swipe-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 1100;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 8px 16px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    display: none; /* Скрываем индикатор свайпа */
   }
 
   .swipe-dot {
-    width: 10px;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    position: relative;
-    cursor: pointer;
+    display: none; /* Скрываем точки индикатора свайпа */
   }
 
-  .swipe-dot.active {
-    background-color: var(--menu-gold);
-    transform: scale(1.3);
-  }
-
-  /* Анимация свайпа */
+  /* Удаляем анимацию свайпа */
   .swipe-indicator::before,
   .swipe-indicator::after {
-    content: "";
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: var(--menu-gold);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .swipe-indicator::before {
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: pulseUp 2s infinite;
-  }
-
-  .swipe-indicator::after {
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: pulseDown 2s infinite;
+    display: none;
   }
 
   @keyframes pulseUp {
     0%,
     100% {
       opacity: 0;
-      transform: translateX(-50%) translateY(0);
-    }
-    50% {
-      opacity: 0.5;
-      transform: translateX(-50%) translateY(-5px);
     }
   }
 
@@ -3175,120 +3097,7 @@ body.no-scroll {
     0%,
     100% {
       opacity: 0;
-      transform: translateX(-50%) translateY(0);
     }
-    50% {
-      opacity: 0.5;
-      transform: translateX(-50%) translateY(5px);
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  /* Улучшенная адаптация секции "Производство и сервис" для мобильной версии */
-  .services-section {
-    background-image: none !important;
-    background: none !important;
-    background-color: #ffffff !important;
-    padding: 6rem 1.5rem 2rem !important;
-  }
-
-  .services-background {
-    display: none !important; /* Скрываем фоновое видео */
-  }
-
-  .background-video {
-    display: none !important; /* Скрываем фоновое видео */
-  }
-
-  /* Сохраняем цвет плашек как в десктопной версии */
-  .services-card {
-    /* Оставляем оригинальный стиль */
-    background: #313233 !important;
-    color: #ffffff !important;
-    border: 1px solid var(--gold-color);
-  }
-
-  .services-header h3 {
-    color: #ffffff !important; /* Сохраняем белый цвет текста */
-  }
-
-  .services-card:hover {
-    background: #ffbe00 !important; /* Сохраняем оригинальный цвет при наведении */
-    color: #ffffff !important;
-  }
-
-  /* Стили для модальных окон в мобильной версии, как в десктопе */
-  .modal {
-    background: #e9ecf3 !important;
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--gold-color);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 100%;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    transform: translateY(100%);
-    border-radius: 15px 15px 0 0;
-    max-height: 80vh;
-  }
-
-  .modal-header {
-    background-color: transparent !important;
-    border-bottom: none !important;
-    padding: 15px 20px !important;
-    margin-bottom: 0.5rem;
-  }
-
-  .modal-title {
-    color: var(--text-color) !important;
-    font-size: 1.5rem;
-  }
-
-  .modal-close {
-    color: var(--text-color) !important;
-  }
-
-  .modal-content {
-    color: #666 !important;
-  }
-
-  .modal::after {
-    background: rgba(0, 0, 0, 0.2); /* Меняем цвет индикатора свайпа */
-  }
-}
-
-/* Добавляем стили для очень маленьких экранов, включая ширину 370px */
-@media screen and (max-width: 400px) {
-  .about-section {
-    background-image: url("Images/affinitybg.png") !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
-    background-color: transparent !important;
-  }
-
-  .services-section {
-    background-image: url("Images/affinitybg.png") !important;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
-    background-color: transparent !important;
-  }
-
-  /* Улучшаем контрастность текста на карточках для лучшей читаемости */
-  .about-item {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-  }
-
-  /* Уменьшаем отступы для лучшего отображения на маленьких экранах */
-  .about-section,
-  .services-section {
-    padding: 5rem 1rem 1rem !important;
   }
 }
 
@@ -3350,9 +3159,144 @@ body.no-scroll {
   .contacts-section {
     padding-bottom: 80px !important;
   }
+}
 
-  /* Скрываем свайп-индикатор, так как теперь используем кнопки */
-  .swipe-indicator {
-    display: none !important;
+@media screen and (max-width: 768px) {
+  /* Адаптация раздела "Ювелирный мерч" */
+  .jewelry-section {
+    overflow: hidden;
+    padding-top: 60px;
+  }
+
+  .jewelry-layout {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  /* Сделаем текстовые карточки отображаться под слайдером */
+  .jewelry-card-left {
+    order: 2;
+    margin: 0;
+    padding: 1.5rem;
+    width: 100%;
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .jewelry-card-right {
+    order: 3;
+    margin: 0;
+    padding: 1.5rem;
+    width: 100%;
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Адаптация слайдера для мобильных */
+  .about-slider {
+    order: 1;
+    position: relative;
+    width: 100vw;
+    height: 70vh;
+    margin: 0 0 1rem;
+    overflow: hidden;
+    border-radius: 0;
+    touch-action: pan-x;
+  }
+
+  .about-slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    touch-action: pan-x;
+  }
+
+  .about-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .about-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .slider-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    margin-top: 0;
+    gap: 15px;
+  }
+
+  /* Скрываем стрелки на мобильной версии, используем свайпы */
+  .slider-arrow {
+    display: none;
+  }
+
+  .slider-dots {
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .slider-dot.active {
+    background-color: #ffbe00;
+    transform: scale(1.2);
+  }
+
+  /* Добавляем свайп-эффект для слайдера */
+  .jewelry-section .about-slide {
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+  }
+
+  .jewelry-section .about-slide.active {
+    transform: translateX(0);
+  }
+
+  .jewelry-section .about-slide.next {
+    transform: translateX(100%);
+  }
+
+  .jewelry-section .about-slide.prev {
+    transform: translateX(-100%);
+  }
+
+  /* Улучшаем отображение текста */
+  .jewelry-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .jewelry-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .jewelry-card .note {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 }
