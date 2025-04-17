@@ -267,6 +267,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Функция для обработки скролла
   function handleScroll(e) {
+    // Для мобильных устройств отключаем автоматическую прокрутку
+    if (window.innerWidth <= 768) {
+      return;
+    }
+
     if (isScrolling) return;
 
     const currentTime = Date.now();
@@ -347,6 +352,93 @@ document.addEventListener("DOMContentLoaded", () => {
     }, scrollDelay);
   }
 
+  // Отключаем обработчики сенсорных событий для переключения секций на мобильных устройствах
+  function initMobileSwipe() {
+    // Для мобильной версии отключаем эту функцию
+    if (window.innerWidth <= 768) {
+      return;
+    }
+  }
+
+  function handleTouchStart(e) {
+    // Для мобильной версии отключаем эту функцию
+    if (window.innerWidth <= 768) {
+      return;
+    }
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+  }
+
+  function handleTouchMove(e) {
+    // Для мобильной версии отключаем эту функцию
+    if (window.innerWidth <= 768) {
+      return;
+    }
+    touchEndY = e.touches[0].clientY;
+    touchEndX = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd() {
+    // Для мобильной версии отключаем эту функцию
+    if (window.innerWidth <= 768) {
+      return;
+    }
+
+    const swipeDistanceY = touchStartY - touchEndY;
+    const swipeDistanceX = touchStartX - touchEndX;
+
+    if (
+      Math.abs(swipeDistanceY) > minSwipeDistance &&
+      Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)
+    ) {
+      if (swipeDistanceY > 0) {
+        handleSwipeUp();
+      } else {
+        handleSwipeDown();
+      }
+    }
+  }
+
+  function handleSwipeUp() {
+    // Для мобильной версии отключаем эту функцию
+    if (window.innerWidth <= 768) {
+      return;
+    }
+
+    if (isScrolling) return;
+    isScrolling = true;
+
+    // Имитация скролла вниз
+    const event = new WheelEvent("wheel", {
+      deltaY: 100,
+    });
+    handleScroll(event);
+
+    setTimeout(() => {
+      isScrolling = false;
+    }, scrollDelay);
+  }
+
+  function handleSwipeDown() {
+    // Для мобильной версии отключаем эту функцию
+    if (window.innerWidth <= 768) {
+      return;
+    }
+
+    if (isScrolling) return;
+    isScrolling = true;
+
+    // Имитация скролла вверх
+    const event = new WheelEvent("wheel", {
+      deltaY: -100,
+    });
+    handleScroll(event);
+
+    setTimeout(() => {
+      isScrolling = false;
+    }, scrollDelay);
+  }
+
   // Сброс стилей для мобильных устройств
   function resetMobileStyles() {
     if (window.innerWidth <= 768) {
@@ -383,14 +475,41 @@ document.addEventListener("DOMContentLoaded", () => {
   // Добавляем обработчик скролла только для десктопа
   if (window.innerWidth > 768) {
     window.addEventListener("wheel", handleScroll, { passive: true });
+
+    // Добавляем обработчики для тач-устройств (планшеты в десктопном режиме)
+    if ("ontouchstart" in window) {
+      document.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      document.addEventListener("touchend", handleTouchEnd, { passive: false });
+    }
   }
 
   // Обновляем обработчик изменения размера окна для скролла
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
       window.addEventListener("wheel", handleScroll, { passive: true });
+
+      // Для тач-устройств
+      if ("ontouchstart" in window) {
+        document.addEventListener("touchstart", handleTouchStart, {
+          passive: false,
+        });
+        document.addEventListener("touchmove", handleTouchMove, {
+          passive: false,
+        });
+        document.addEventListener("touchend", handleTouchEnd, {
+          passive: false,
+        });
+      }
     } else {
       window.removeEventListener("wheel", handleScroll);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     }
   });
 
@@ -519,37 +638,11 @@ document.addEventListener("DOMContentLoaded", () => {
     header.setAttribute("aria-expanded", "false");
   });
 
-  // Отключаем обработку свайпов на мобильных устройствах для всего сайта, кроме слайдера
-  function initMobileSwipe() {
-    // Отключаем для мобильных устройств
-    return;
-  }
-
-  // Обработчики сенсорных событий для переключения секций отключены
-  function handleTouchStart(e) {
-    // Функция отключена для переключения секций
-    return;
-  }
-
-  function handleTouchMove(e) {
-    // Функция отключена для переключения секций
-    return;
-  }
-
-  function handleTouchEnd() {
-    // Функция отключена для переключения секций
-    return;
-  }
-
-  function handleSwipeUp() {
-    // Функция отключена для переключения секций
-    return;
-  }
-
-  function handleSwipeDown() {
-    // Функция отключена для переключения секций
-    return;
-  }
+  // Отключаем обработку свайпов и колеса мыши
+  document.removeEventListener("wheel", handleScroll);
+  document.removeEventListener("touchstart", handleTouchStart);
+  document.removeEventListener("touchmove", handleTouchMove);
+  document.removeEventListener("touchend", handleTouchEnd);
 
   // Функция для возврата на главную
   function goToHomeSection() {
@@ -713,26 +806,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Обновляем при изменении размера окна
   window.addEventListener("resize", initMobileBottomNav);
 
-  // Обновляем оригинальную функцию инициализации мобильного свайпа
-  // чтобы не создавать свайп-индикатор, так как теперь используются кнопки
-  function initMobileSwipe() {
-    // Проверяем ширину экрана
-    if (window.innerWidth > 768) {
-      // Если не мобильное устройство, используем стандартную функцию
-      if ("ontouchstart" in window) {
-        document.addEventListener("touchstart", handleTouchStart, {
-          passive: false,
-        });
-        document.addEventListener("touchmove", handleTouchMove, {
-          passive: false,
-        });
-        document.addEventListener("touchend", handleTouchEnd, {
-          passive: false,
-        });
-      }
-    }
-  }
-
   // Обработка модальных окон
   const modalOverlay = document.querySelector(".modal-overlay");
   const modals = document.querySelectorAll(".modal");
@@ -874,8 +947,8 @@ document.addEventListener("DOMContentLoaded", () => {
       slideInterval = setInterval(nextSlide, 5000);
     });
 
-    // Добавляем обработку свайпов для слайдера только в разделе "Ювелирный мерч" на мобильных устройствах
-    if (window.innerWidth <= 768 && slider.closest(".jewelry-section")) {
+    // Обработка горизонтальных свайпов для слайдера на мобильных устройствах
+    if (window.innerWidth <= 768) {
       let touchStartX = 0;
       let touchEndX = 0;
       const minSwipeDistance = 50;
@@ -892,8 +965,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "touchmove",
         function (e) {
           touchEndX = e.touches[0].clientX;
+          // Предотвращаем вертикальную прокрутку при горизонтальном свайпе
+          if (Math.abs(touchStartX - touchEndX) > 30) {
+            e.preventDefault();
+          }
         },
-        { passive: true }
+        { passive: false }
       );
 
       slider.addEventListener(
