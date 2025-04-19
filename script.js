@@ -1057,8 +1057,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Обработка отправки формы
-  consultationForm.addEventListener("submit", function (e) {
+  // Функция для отправки данных в Telegram
+  async function sendToTelegram(formData) {
+    try {
+      // Массив ID чатов получателей
+      const chatIds = ["271823315", "478588941"]; // Замените на реальные ID чатов
+      const botToken = "8178204212:AAEDZnqnBJ-mb6fCaB6-2lsdDerEEpCEugU"; // Замените на токен вашего бота
+
+      // Формируем текст сообщения
+      let messageText = "Новая заявка с сайта Affinity:\n\n";
+
+      // Добавляем все данные формы в сообщение
+      for (const [key, value] of formData.entries()) {
+        messageText += `${key}: ${value}\n`;
+      }
+
+      // Отправляем сообщение каждому получателю
+      const sendPromises = chatIds.map((chatId) => {
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        const data = {
+          chat_id: chatId,
+          text: messageText,
+          parse_mode: "HTML",
+        };
+
+        return fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      });
+
+      // Ждем отправки всех сообщений
+      await Promise.all(sendPromises);
+      return true;
+    } catch (error) {
+      console.error("Ошибка при отправке в Telegram:", error);
+      return false;
+    }
+  }
+
+  // Обработка отправки формы консультации (заменяем существующий код)
+  consultationForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
@@ -1073,85 +1115,136 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Если все поля заполнены
-    modalConsultation.classList.remove("active");
-    modalSuccess.classList.add("active");
-    modalSuccess.style.display = "block";
-    modalSuccess.style.opacity = "1";
-    modalSuccess.style.visibility = "visible";
+    // Собираем данные формы
+    const formData = new FormData();
+    formData.append("Имя", name);
+    formData.append("Контакт", contact);
+    formData.append("Форма", "Запрос консультации");
 
-    // Добавляем имя в сообщение
-    document.querySelector("#modal-success .user-name").textContent = name;
+    // Отправляем данные в Telegram
+    const sent = await sendToTelegram(formData);
 
-    // Закрыть окно успеха через 3 секунды
-    setTimeout(() => {
-      modalSuccess.classList.remove("active");
-      modalSuccess.style.display = "none";
-      modalSuccess.style.opacity = "0";
-      modalSuccess.style.visibility = "hidden";
-      modalOverlay.classList.remove("active");
-      // Очистить форму
-      consultationForm.reset();
-    }, 3000);
-  });
-
-  // Обработка закрытия окна с ошибкой
-  document
-    .querySelector("#modal-error .modal-close")
-    .addEventListener("click", function () {
-      modalError.classList.remove("active");
-      modalError.style.display = "none";
-      modalError.style.opacity = "0";
-      modalError.style.visibility = "hidden";
-      // НЕ закрываем оверлей и окно консультации
-    });
-
-  // Закрытие по клику на оверлей
-  modalOverlay.addEventListener("click", function () {
-    if (
-      !modalError.classList.contains("active") &&
-      !modalSuccess.classList.contains("active")
-    ) {
+    // Если отправка прошла успешно
+    if (sent) {
+      // Если все поля заполнены
       modalConsultation.classList.remove("active");
-      modalOverlay.classList.remove("active");
+      modalSuccess.classList.add("active");
+      modalSuccess.style.display = "block";
+      modalSuccess.style.opacity = "1";
+      modalSuccess.style.visibility = "visible";
+
+      // Добавляем имя в сообщение
+      document.querySelector("#modal-success .user-name").textContent = name;
+
+      // Закрыть окно успеха через 3 секунды
+      setTimeout(() => {
+        modalSuccess.classList.remove("active");
+        modalSuccess.style.display = "none";
+        modalSuccess.style.opacity = "0";
+        modalSuccess.style.visibility = "hidden";
+        modalOverlay.classList.remove("active");
+        // Очистить форму
+        consultationForm.reset();
+      }, 3000);
+    } else {
+      // Если произошла ошибка при отправке
+      modalError.querySelector(".modal-content p").textContent =
+        "Ошибка при отправке. Пожалуйста, попробуйте позже.";
+      modalError.classList.add("active");
+      modalError.style.display = "block";
+      modalError.style.opacity = "1";
+      modalError.style.visibility = "visible";
     }
   });
 
-  // Обработка отправки формы контактов
+  // Обработка отправки формы контактов (заменяем существующий код)
   const contactsForm = document.getElementById("contacts-form");
   if (contactsForm) {
-    contactsForm.addEventListener("submit", function (e) {
+    contactsForm.addEventListener("submit", async function (e) {
       e.preventDefault();
-      const name = document.getElementById("contact-name").value;
-      const phone = document.getElementById("contact-phone").value;
+      const name = document.getElementById("contact-name").value.trim();
+      const phone = document.getElementById("contact-phone").value.trim();
+      const company = document.getElementById("contact-company").value.trim();
+      const email = document.getElementById("contact-email").value.trim();
+      const contactMethod = document.querySelector(
+        'input[name="contact-method"]:checked'
+      ).value;
 
       if (!name || !phone) {
         const modalError = document.getElementById("modal-error");
         if (modalError) {
           modalError.classList.add("active");
+          modalError.style.display = "block";
+          modalError.style.opacity = "1";
+          modalError.style.visibility = "visible";
+          modalOverlay.classList.add("active");
           setTimeout(() => {
             modalError.classList.remove("active");
+            modalError.style.display = "none";
+            modalError.style.opacity = "0";
+            modalError.style.visibility = "hidden";
+            modalOverlay.classList.remove("active");
           }, 3000);
         }
         return;
       }
 
-      // Здесь будет логика отправки формы
+      // Собираем данные формы
+      const formData = new FormData();
+      formData.append("Имя", name);
+      formData.append("Телефон", phone);
+      formData.append("Компания", company || "Не указана");
+      formData.append("Email", email || "Не указан");
+      formData.append("Способ связи", contactMethod);
+      formData.append("Форма", "Форма обратной связи");
+
+      // Отправляем данные в Telegram
+      const sent = await sendToTelegram(formData);
 
       // Показываем сообщение об успешной отправке
-      const modalSuccess = document.getElementById("modal-success");
-      if (modalSuccess) {
-        const userNameSpan = modalSuccess.querySelector(".user-name");
-        if (userNameSpan) {
-          userNameSpan.textContent = name;
-        }
-        modalSuccess.classList.add("active");
+      if (sent) {
+        const modalSuccess = document.getElementById("modal-success");
+        if (modalSuccess) {
+          const userNameSpan = modalSuccess.querySelector(".user-name");
+          if (userNameSpan) {
+            userNameSpan.textContent = name;
+          }
+          modalSuccess.classList.add("active");
+          modalSuccess.style.display = "block";
+          modalSuccess.style.opacity = "1";
+          modalSuccess.style.visibility = "visible";
+          modalOverlay.classList.add("active");
 
-        // Закрываем модальное окно через 3 секунды
-        setTimeout(() => {
-          modalSuccess.classList.remove("active");
-          contactsForm.reset();
-        }, 3000);
+          // Закрыть окно успеха через 3 секунды
+          setTimeout(() => {
+            modalSuccess.classList.remove("active");
+            modalSuccess.style.display = "none";
+            modalSuccess.style.opacity = "0";
+            modalSuccess.style.visibility = "hidden";
+            modalOverlay.classList.remove("active");
+            // Очистить форму
+            contactsForm.reset();
+          }, 3000);
+        }
+      } else {
+        // Если произошла ошибка при отправке
+        const modalError = document.getElementById("modal-error");
+        if (modalError) {
+          modalError.querySelector(".modal-content p").textContent =
+            "Ошибка при отправке. Пожалуйста, попробуйте позже.";
+          modalError.classList.add("active");
+          modalError.style.display = "block";
+          modalError.style.opacity = "1";
+          modalError.style.visibility = "visible";
+          modalOverlay.classList.add("active");
+          setTimeout(() => {
+            modalError.classList.remove("active");
+            modalError.style.display = "none";
+            modalError.style.opacity = "0";
+            modalError.style.visibility = "hidden";
+            modalOverlay.classList.remove("active");
+          }, 3000);
+        }
       }
     });
   }
