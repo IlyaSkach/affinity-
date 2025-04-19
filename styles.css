@@ -1439,7 +1439,7 @@ body.no-scroll {
   .about-section {
     background-image: none !important;
     background: none !important;
-    background-color: #ffffff !important;
+    /* background-color: #ffffff !important; */
   }
 }
 
@@ -2152,7 +2152,7 @@ body.no-scroll {
   position: relative;
 }
 
-.modal-content ul li::before {
+/* .modal-content ul li::before {
   content: "";
   position: absolute;
   left: -20px;
@@ -2161,7 +2161,7 @@ body.no-scroll {
   height: 8px;
   background-color: var(--gold-color);
   border-radius: 50%;
-}
+} */
 
 .modal-overlay {
   position: fixed;
@@ -3820,4 +3820,328 @@ body.no-scroll {
   .submit-btn:hover {
     background-color: var(--menu-gold);
   }
+}
+
+/* Стили для модальных окон секции услуг в мобильной версии */
+@media screen and (max-width: 768px) {
+  /* Специальные стили для модальных окон в секции услуг */
+  #modal-materials,
+  #modal-production-steps,
+  #modal-production-time,
+  #modal-min-order,
+  #modal-service-info,
+  #modal-delivery {
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Анимация появления модальных окон для секции услуг */
+  #modal-materials.active,
+  #modal-production-steps.active,
+  #modal-production-time.active,
+  #modal-min-order.active,
+  #modal-service-info.active,
+  #modal-delivery.active {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  /* Стили заголовка модального окна для секции услуг */
+  #modal-materials .modal-header,
+  #modal-production-steps .modal-header,
+  #modal-production-time .modal-header,
+  #modal-min-order .modal-header,
+  #modal-service-info .modal-header,
+  #modal-delivery .modal-header {
+    border-radius: 15px 15px 0 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px 20px;
+  }
+
+  /* Стили контента модального окна для секции услуг */
+  #modal-materials .modal-content,
+  #modal-production-steps .modal-content,
+  #modal-production-time .modal-content,
+  #modal-min-order .modal-content,
+  #modal-service-info .modal-content,
+  #modal-delivery .modal-content {
+    padding: 20px;
+    max-height: calc(80vh - 60px);
+    overflow-y: auto;
+  }
+}
+
+/* ... existing code ... */
+
+/* Исправленные стили секции "Ювелирный мерч" для мобильных устройств */
+@media screen and (max-width: 768px) {
+  /* Основные стили секции */
+  .jewelry-section {
+    overflow-y: auto;
+    height: auto !important;
+    min-height: 100vh;
+    padding: 80px 15px 90px !important;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, #111111, #1a1a1a);
+  }
+
+  .jewelry-section.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .jewelry-content {
+    padding: 0;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Стили для layout */
+  .jewelry-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    height: auto;
+    overflow: visible;
+    padding: 0;
+    width: 100%;
+  }
+
+  /* Восстанавливаем отображение карточек (но с новыми стилями) */
+  .jewelry-card {
+    display: block !important; /* Переопределяем none для отображения */
+    width: 100%;
+    padding: 20px;
+    margin: 0 0 20px 0;
+    height: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 190, 0, 0.3);
+  }
+
+  .jewelry-card-left,
+  .jewelry-card-right {
+    display: block !important; /* Переопределяем none для отображения */
+    margin: 0;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* Стили для текстовых блоков */
+  .jewelry-text-block {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 190, 0, 0.3);
+  }
+
+  .jewelry-text-block h3,
+  .jewelry-card h3 {
+    color: var(--gold-color);
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .jewelry-text-block p,
+  .jewelry-card p {
+    margin-bottom: 15px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .jewelry-text-block .note,
+  .jewelry-card .note {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  /* Улучшенный слайдер */
+  .about-slider {
+    width: 100%;
+    height: 320px;
+    position: relative;
+    margin: 0 auto 30px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 190, 0, 0.3);
+  }
+
+  .about-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+  }
+
+  .about-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  .about-image {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .about-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Крупные и заметные контролы слайдера */
+  .slider-controls {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    z-index: 5;
+    padding: 0 15px;
+  }
+
+  .slider-arrow {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 50px !important;
+    height: 50px !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 50%;
+    border: 2px solid var(--gold-color) !important;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .slider-arrow svg {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 3 !important;
+    fill: none;
+  }
+
+  .slider-arrow:active {
+    transform: scale(0.95);
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .slider-dots {
+    display: flex;
+    gap: 10px;
+  }
+
+  .slider-dot {
+    width: 12px !important;
+    height: 12px !important;
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid var(--gold-color) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .slider-dot.active {
+    background-color: var(--gold-color) !important;
+    transform: scale(1.2);
+  }
+
+  /* Добавляем overlay для лучшей видимости контролов */
+  .about-slider::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* Принудительно показываем стрелки на слайдере */
+  .slider-prev,
+  .slider-next {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+  }
+
+  /* Фиксим проблему с отступами в мобильной версии */
+  .jewelry-section .jewelry-layout {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* ... existing code ... */
+
+@media screen and (max-width: 768px) {
+  /* ... existing code ... */
+
+  /* Изменение фона секции "Консультация" только для мобильной версии */
+  .contacts-section {
+    background: linear-gradient(to bottom, #111111, #1a1a1a) !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    overflow-y: auto;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+
+  .contacts-section.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Убираем фоновые изображения из секции */
+  .contacts-section::before,
+  .contacts-section::after {
+    display: none !important;
+  }
+
+  /* Убираем фоновые изображения внутри контейнера */
+  .contacts-section .contact-bg-image {
+    display: none !important;
+  }
+
+  /* ... existing code ... */
 }

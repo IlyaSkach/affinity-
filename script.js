@@ -1276,4 +1276,348 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // Функция для адаптации секции "Ювелирный мерч" на мобильных устройствах
+  function adaptJewelrySectionForMobile() {
+    if (window.innerWidth <= 768) {
+      const jewelrySection = document.querySelector(".jewelry-section");
+      const jewelryLayout = document.querySelector(".jewelry-layout");
+
+      // Если секция найдена и еще не адаптирована
+      if (
+        jewelrySection &&
+        jewelryLayout &&
+        !jewelrySection.classList.contains("mobile-adapted")
+      ) {
+        // Получаем данные из существующих карточек
+        const leftCardContent = document.querySelector(".jewelry-card-left");
+        const rightCardContent = document.querySelector(".jewelry-card-right");
+        const slider = document.querySelector(".about-slider");
+
+        if (leftCardContent && rightCardContent && slider) {
+          // Клонируем слайдер вместо прямого перемещения
+          const clonedSlider = slider.cloneNode(true);
+
+          // Создаем новые текстовые блоки
+          const textBlock1 = document.createElement("div");
+          textBlock1.className = "jewelry-text-block";
+          textBlock1.innerHTML = leftCardContent.innerHTML;
+
+          const textBlock2 = document.createElement("div");
+          textBlock2.className = "jewelry-text-block";
+          textBlock2.innerHTML = rightCardContent.innerHTML;
+
+          // Сохраняем оригинальный контент для десктопа
+          const originalContent = jewelryLayout.innerHTML;
+          jewelryLayout.setAttribute("data-desktop-content", originalContent);
+
+          // Очищаем существующий layout
+          jewelryLayout.innerHTML = "";
+
+          // Добавляем слайдер и текстовые блоки в новой структуре
+          jewelryLayout.appendChild(clonedSlider);
+          jewelryLayout.appendChild(textBlock1);
+          jewelryLayout.appendChild(textBlock2);
+
+          // Отмечаем секцию как адаптированную
+          jewelrySection.classList.add("mobile-adapted");
+
+          // Переинициализируем слайдер
+          initSliderForMobile(jewelryLayout);
+        }
+      }
+    } else {
+      // Возвращаем десктопную версию, если мы увеличили экран
+      const jewelrySection = document.querySelector(".jewelry-section");
+      const jewelryLayout = document.querySelector(".jewelry-layout");
+
+      if (
+        jewelrySection &&
+        jewelryLayout &&
+        jewelrySection.classList.contains("mobile-adapted")
+      ) {
+        const originalContent = jewelryLayout.getAttribute(
+          "data-desktop-content"
+        );
+        if (originalContent) {
+          jewelryLayout.innerHTML = originalContent;
+        }
+        jewelrySection.classList.remove("mobile-adapted");
+      }
+    }
+  }
+
+  // Переинициализация слайдера для мобильных устройств
+  function initSliderForMobile(container) {
+    const slider = container.querySelector(".about-slider");
+    if (!slider) return;
+
+    const slides = slider.querySelectorAll(".about-slide");
+    const dots = slider.querySelectorAll(".slider-dot");
+    const prevBtn = slider.querySelector(".slider-prev");
+    const nextBtn = slider.querySelector(".slider-next");
+
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+
+    // Функция для отображения нужного слайда
+    function showSlide(index) {
+      slides.forEach((slide) => slide.classList.remove("active"));
+      dots.forEach((dot) => dot.classList.remove("active"));
+
+      if (index >= totalSlides) {
+        currentSlide = 0;
+      } else if (index < 0) {
+        currentSlide = totalSlides - 1;
+      } else {
+        currentSlide = index;
+      }
+
+      slides[currentSlide].classList.add("active");
+      dots[currentSlide].classList.add("active");
+    }
+
+    // Следующий слайд
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    // Предыдущий слайд
+    function prevSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    // Удаляем старые обработчики, если они есть
+    if (prevBtn) {
+      const newPrevBtn = prevBtn.cloneNode(true);
+      prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+      newPrevBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        prevSlide();
+      });
+    }
+
+    if (nextBtn) {
+      const newNextBtn = nextBtn.cloneNode(true);
+      nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+      newNextBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        nextSlide();
+      });
+    }
+
+    // Добавляем обработчики на точки
+    dots.forEach((dot, index) => {
+      const newDot = dot.cloneNode(true);
+      dot.parentNode.replaceChild(newDot, dot);
+      newDot.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showSlide(index);
+      });
+    });
+
+    // Устанавливаем начальный слайд
+    showSlide(0);
+
+    // Добавляем свайпы для мобильной версии
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50;
+
+    slider.addEventListener(
+      "touchstart",
+      function (e) {
+        touchStartX = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    slider.addEventListener(
+      "touchend",
+      function (e) {
+        touchEndX = e.changedTouches[0].clientX;
+        const swipeDistance = touchStartX - touchEndX;
+
+        if (Math.abs(swipeDistance) > minSwipeDistance) {
+          if (swipeDistance > 0) {
+            // Свайп влево - следующий слайд
+            nextSlide();
+          } else {
+            // Свайп вправо - предыдущий слайд
+            prevSlide();
+          }
+        }
+      },
+      { passive: true }
+    );
+  }
+
+  // Функция для исправления скролла в мобильных секциях "Партнерам" и "Консультация"
+  function fixMobileSectionsScroll() {
+    if (window.innerWidth <= 768) {
+      const partnerSection = document.querySelector(".partner-section");
+      const contactsSection = document.querySelector(".contacts-section");
+
+      // Добавляем обработчик для секции "Партнерам"
+      if (partnerSection) {
+        partnerSection.addEventListener(
+          "wheel",
+          function (e) {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (e.deltaY < 0 && scrollTop === 0) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+
+            // Если пользователь скроллит вниз и контент уже в самом низу
+            if (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight - 1) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+
+        // Добавляем обработчик для предотвращения переполнения скролла на сенсорных устройствах
+        partnerSection.addEventListener(
+          "touchstart",
+          function (e) {
+            this.startY = e.touches[0].clientY;
+          },
+          { passive: false }
+        );
+
+        partnerSection.addEventListener(
+          "touchmove",
+          function (e) {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+            const currentY = e.touches[0].clientY;
+            const touchDirection = this.startY - currentY;
+
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (touchDirection < 0 && scrollTop <= 0) {
+              e.preventDefault();
+            }
+
+            // Если пользователь скроллит вниз и контент уже в самом низу
+            if (
+              touchDirection > 0 &&
+              scrollTop + clientHeight >= scrollHeight - 1
+            ) {
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+      }
+
+      // Добавляем обработчик для секции "Консультация"
+      if (contactsSection) {
+        contactsSection.addEventListener(
+          "wheel",
+          function (e) {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (e.deltaY < 0 && scrollTop === 0) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+
+            // Если пользователь скроллит вниз и контент уже в самом низу
+            if (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight - 1) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+
+        // Добавляем обработчик для предотвращения переполнения скролла на сенсорных устройствах
+        contactsSection.addEventListener(
+          "touchstart",
+          function (e) {
+            this.startY = e.touches[0].clientY;
+          },
+          { passive: false }
+        );
+
+        contactsSection.addEventListener(
+          "touchmove",
+          function (e) {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+            const currentY = e.touches[0].clientY;
+            const touchDirection = this.startY - currentY;
+
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (touchDirection < 0 && scrollTop <= 0) {
+              e.preventDefault();
+            }
+
+            // Если пользователь скроллит вниз и контент уже в самом низу
+            if (
+              touchDirection > 0 &&
+              scrollTop + clientHeight >= scrollHeight - 1
+            ) {
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+      }
+    }
+  }
+
+  // Запускаем исправления скролла после загрузки DOM
+  document.addEventListener("DOMContentLoaded", function () {
+    adaptJewelrySectionForMobile();
+    fixMobileSectionsScroll();
+
+    // Добавляем обработчик изменения размера окна с дебаунсом
+    let resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        adaptJewelrySectionForMobile();
+        fixMobileSectionsScroll();
+      }, 250);
+    });
+  });
+
+  // Модифицируем функции перехода по секциям для мобильных устройств
+  // Оборачиваем в функцию для предотвращения ошибок с дублированием переменных
+  (function () {
+    // Переопределение функции goToPartnerSection для мобильной версии
+    const oldGoToPartnerSection = window.goToPartnerSection;
+    window.goToPartnerSection = function () {
+      oldGoToPartnerSection.call(this);
+
+      if (window.innerWidth <= 768) {
+        const partnerSection = document.querySelector(".partner-section");
+        if (partnerSection) {
+          // Устанавливаем скролл в начало при переходе на секцию
+          partnerSection.scrollTop = 0;
+        }
+      }
+    };
+
+    // Переопределение функции goToContactsSection для мобильной версии
+    const oldGoToContactsSection = window.goToContactsSection;
+    window.goToContactsSection = function () {
+      oldGoToContactsSection.call(this);
+
+      if (window.innerWidth <= 768) {
+        const contactsSection = document.querySelector(".contacts-section");
+        if (contactsSection) {
+          // Устанавливаем скролл в начало при переходе на секцию
+          contactsSection.scrollTop = 0;
+        }
+      }
+    };
+  })();
 });
