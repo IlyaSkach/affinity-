@@ -776,80 +776,36 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Переопределяем функции перехода к секциям
-  (function () {
-    // Переопределение для перехода к секции "Услуги"
-    const oldGoToServicesSection = window.goToServicesSection;
-    window.goToServicesSection = function () {
-      oldGoToServicesSection.call(this);
+  // Обновляем функции для перехода между разделами
+  const originalGoToAboutSection = goToAboutSection;
+  goToAboutSection = function () {
+    originalGoToAboutSection();
+    updateMobileNavButton();
+  };
 
-      if (window.innerWidth <= 768) {
-        const servicesSection = document.querySelector(".services-section");
-        if (servicesSection) {
-          // Сбрасываем скролл вверх при открытии секции
-          servicesSection.scrollTop = 0;
+  const originalGoToServicesSection = goToServicesSection;
+  goToServicesSection = function () {
+    originalGoToServicesSection();
+    updateMobileNavButton();
+  };
 
-          // Добавляем класс для специальных стилей
-          servicesSection.classList.add("scroll-enabled");
+  const originalGoToJewelrySection = goToJewelrySection;
+  goToJewelrySection = function () {
+    originalGoToJewelrySection();
+    updateMobileNavButton();
+  };
 
-          // Добавляем класс для блокировки скролла на body
-          document.body.classList.add("no-scroll-redirect");
-        }
-      } else {
-        // Для десктопной версии убираем блокировку
-        document.body.classList.remove("no-scroll-redirect");
-      }
-    };
+  const originalGoToPartnerSection = goToPartnerSection;
+  goToPartnerSection = function () {
+    originalGoToPartnerSection();
+    updateMobileNavButton();
+  };
 
-    // Переопределение для перехода к секции "Партнерам"
-    const oldGoToPartnerSection = window.goToPartnerSection;
-    window.goToPartnerSection = function () {
-      oldGoToPartnerSection.call(this);
-
-      if (window.innerWidth <= 768) {
-        const partnerSection = document.querySelector(".partner-section");
-        if (partnerSection) {
-          // Сбрасываем скролл вверх при открытии секции
-          partnerSection.scrollTop = 0;
-
-          // Добавляем класс для специальных стилей
-          partnerSection.classList.add("scroll-enabled");
-
-          // Добавляем класс для блокировки скролла на body
-          document.body.classList.add("no-scroll-redirect");
-        }
-      } else {
-        // Для десктопной версии убираем блокировку
-        document.body.classList.remove("no-scroll-redirect");
-      }
-    };
-
-    // Переопределение для перехода на главную или другие секции
-    const oldGoToHomeSection = window.goToHomeSection;
-    window.goToHomeSection = function () {
-      oldGoToHomeSection.call(this);
-
-      // Снимаем блокировку при переходе на главную
-      document.body.classList.remove("no-scroll-redirect");
-    };
-
-    // Также добавим для других секций для полноты
-    const oldGoToAboutSection = window.goToAboutSection;
-    window.goToAboutSection = function () {
-      oldGoToAboutSection.call(this);
-
-      // Снимаем блокировку при переходе на другие секции
-      document.body.classList.remove("no-scroll-redirect");
-    };
-
-    const oldGoToJewelrySection = window.goToJewelrySection;
-    window.goToJewelrySection = function () {
-      oldGoToJewelrySection.call(this);
-
-      // Снимаем блокировку при переходе на другие секции
-      document.body.classList.remove("no-scroll-redirect");
-    };
-  })();
+  const originalGoToHomeSection = goToHomeSection;
+  goToHomeSection = function () {
+    originalGoToHomeSection();
+    updateMobileNavButton();
+  };
 
   // Вызываем функцию инициализации при загрузке страницы
   initMobileBottomNav();
@@ -1499,76 +1455,56 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // Функция для фиксации всех проблемных секций в мобильной версии
-  function fixAllMobileSections() {
+  // Функция для исправления скролла в мобильных секциях "Партнерам" и "Консультация"
+  function fixMobileSectionsScroll() {
     if (window.innerWidth <= 768) {
-      // Массив секций, которые нужно зафиксировать
-      const sections = [
-        document.querySelector(".partner-section"),
-        document.querySelector(".services-section"),
-      ];
+      const partnerSection = document.querySelector(".partner-section");
+      const contactsSection = document.querySelector(".contacts-section");
 
-      // Применяем фиксацию к каждой секции
-      sections.forEach((section) => {
-        if (!section) return;
-
-        // Удаляем предыдущие обработчики
-        section.removeEventListener("wheel", preventDefaultScroll);
-        section.removeEventListener("touchstart", touchStartHandler);
-        section.removeEventListener("touchmove", touchMoveHandler);
-
-        // Устанавливаем стили для скролла
-        section.style.overflowY = "auto";
-        section.style.overflowX = "hidden";
-        section.style.touchAction = "pan-y";
-
-        // Добавляем класс для применения CSS
-        section.classList.add("scroll-enabled");
-
-        // Блокируем все события колеса мыши на этой секции
-        section.addEventListener(
+      // Добавляем обработчик для секции "Партнерам"
+      if (partnerSection) {
+        partnerSection.addEventListener(
           "wheel",
           function (e) {
             const { scrollTop, scrollHeight, clientHeight } = this;
 
-            // При скролле вверх в самом верху
-            if (e.deltaY < 0 && scrollTop <= 0) {
-              e.preventDefault();
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (e.deltaY < 0 && scrollTop === 0) {
               e.stopPropagation();
+              e.preventDefault();
             }
 
-            // При скролле вниз в самом низу
+            // Если пользователь скроллит вниз и контент уже в самом низу
             if (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight - 1) {
-              e.preventDefault();
               e.stopPropagation();
+              e.preventDefault();
             }
           },
           { passive: false }
         );
 
-        // Обработчик начала касания
-        section.addEventListener(
+        // Добавляем обработчик для предотвращения переполнения скролла на сенсорных устройствах
+        partnerSection.addEventListener(
           "touchstart",
           function (e) {
             this.startY = e.touches[0].clientY;
           },
-          { passive: true }
+          { passive: false }
         );
 
-        // Обработчик движения пальца
-        section.addEventListener(
+        partnerSection.addEventListener(
           "touchmove",
           function (e) {
             const { scrollTop, scrollHeight, clientHeight } = this;
             const currentY = e.touches[0].clientY;
             const touchDirection = this.startY - currentY;
 
-            // При движении вверх в самом верху
+            // Если пользователь скроллит вверх и контент уже в самом верху
             if (touchDirection < 0 && scrollTop <= 0) {
               e.preventDefault();
             }
 
-            // При движении вниз в самом низу
+            // Если пользователь скроллит вниз и контент уже в самом низу
             if (
               touchDirection > 0 &&
               scrollTop + clientHeight >= scrollHeight - 1
@@ -1578,41 +1514,110 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           { passive: false }
         );
-      });
+      }
+
+      // Добавляем обработчик для секции "Консультация"
+      if (contactsSection) {
+        contactsSection.addEventListener(
+          "wheel",
+          function (e) {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (e.deltaY < 0 && scrollTop === 0) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+
+            // Если пользователь скроллит вниз и контент уже в самом низу
+            if (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight - 1) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+
+        // Добавляем обработчик для предотвращения переполнения скролла на сенсорных устройствах
+        contactsSection.addEventListener(
+          "touchstart",
+          function (e) {
+            this.startY = e.touches[0].clientY;
+          },
+          { passive: false }
+        );
+
+        contactsSection.addEventListener(
+          "touchmove",
+          function (e) {
+            const { scrollTop, scrollHeight, clientHeight } = this;
+            const currentY = e.touches[0].clientY;
+            const touchDirection = this.startY - currentY;
+
+            // Если пользователь скроллит вверх и контент уже в самом верху
+            if (touchDirection < 0 && scrollTop <= 0) {
+              e.preventDefault();
+            }
+
+            // Если пользователь скроллит вниз и контент уже в самом низу
+            if (
+              touchDirection > 0 &&
+              scrollTop + clientHeight >= scrollHeight - 1
+            ) {
+              e.preventDefault();
+            }
+          },
+          { passive: false }
+        );
+      }
     }
   }
 
-  // Обработчики для touch событий
-  function touchStartHandler(e) {
-    this.startY = e.touches[0].clientY;
-  }
-
-  function touchMoveHandler(e) {
-    e.preventDefault(); // Блокируем стандартное поведение
-  }
-
-  // Функция для предотвращения действия по умолчанию
-  function preventDefaultScroll(e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-  // Запускаем фиксацию при загрузке DOM
+  // Запускаем исправления скролла после загрузки DOM
   document.addEventListener("DOMContentLoaded", function () {
-    // Существующий код
     adaptJewelrySectionForMobile();
+    fixMobileSectionsScroll();
 
-    // Новая функция для фиксации секций
-    fixAllMobileSections();
-
-    // Обработчик изменения размера с дебаунсом
+    // Добавляем обработчик изменения размера окна с дебаунсом
     let resizeTimer;
     window.addEventListener("resize", function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
         adaptJewelrySectionForMobile();
-        fixAllMobileSections();
+        fixMobileSectionsScroll();
       }, 250);
     });
   });
+
+  // Модифицируем функции перехода по секциям для мобильных устройств
+  // Оборачиваем в функцию для предотвращения ошибок с дублированием переменных
+  (function () {
+    // Переопределение функции goToPartnerSection для мобильной версии
+    const oldGoToPartnerSection = window.goToPartnerSection;
+    window.goToPartnerSection = function () {
+      oldGoToPartnerSection.call(this);
+
+      if (window.innerWidth <= 768) {
+        const partnerSection = document.querySelector(".partner-section");
+        if (partnerSection) {
+          // Устанавливаем скролл в начало при переходе на секцию
+          partnerSection.scrollTop = 0;
+        }
+      }
+    };
+
+    // Переопределение функции goToContactsSection для мобильной версии
+    const oldGoToContactsSection = window.goToContactsSection;
+    window.goToContactsSection = function () {
+      oldGoToContactsSection.call(this);
+
+      if (window.innerWidth <= 768) {
+        const contactsSection = document.querySelector(".contacts-section");
+        if (contactsSection) {
+          // Устанавливаем скролл в начало при переходе на секцию
+          contactsSection.scrollTop = 0;
+        }
+      }
+    };
+  })();
 });
