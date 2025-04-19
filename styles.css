@@ -3493,3 +3493,331 @@ body.no-scroll {
     color: #666;
   }
 }
+
+/* Улучшенные стили для мобильной адаптации секции "Ювелирный мерч" */
+@media screen and (max-width: 768px) {
+  /* Секция "Ювелирный мерч" */
+  .jewelry-section {
+    overflow-y: auto;
+    padding: 70px 15px 80px;
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .jewelry-layout {
+    flex-direction: column;
+    padding: 0;
+    gap: 30px;
+    overflow: visible;
+    height: auto;
+  }
+
+  .jewelry-card {
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+    height: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: visible;
+  }
+
+  .jewelry-card-left,
+  .jewelry-card-right {
+    margin: 0;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* Исправление слайдера в секции "Ювелирный мерч" */
+  .about-slider {
+    width: 100%;
+    height: 300px;
+    margin: 0 auto 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-slide {
+    height: 280px;
+  }
+
+  .about-image {
+    height: 100%;
+  }
+
+  .about-img {
+    border-radius: 15px;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .slider-controls {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    z-index: 5;
+  }
+
+  .slider-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    border: 1px solid var(--gold-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .slider-dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .slider-dot {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid var(--gold-color);
+  }
+
+  .slider-dot.active {
+    background-color: var(--gold-color);
+  }
+
+  /* Секция "Партнерам" */
+  .partner-section {
+    overflow-y: auto;
+    padding: 70px 15px 80px;
+    height: auto;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .partner-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+  }
+
+  /* Скрываем изображения фона */
+  .partner-bg-image {
+    display: none;
+  }
+
+  /* Добавляем новый фон как на главной */
+  .partner-section {
+    background: linear-gradient(to bottom, #111111, #333333);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .partner-content {
+    padding: 15px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .partner-blocks {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .partner-block {
+    min-height: 80px;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--gold-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+  }
+
+  .partner-block h3 {
+    font-size: 16px;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+/* Добавление пункта "Консультация" в нижнее мобильное меню */
+@media screen and (max-width: 768px) {
+  .mobile-nav-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: rgba(17, 17, 17, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    border-top: 1px solid var(--gold-color);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .mobile-nav-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 16.66%; /* Изменено с 20% для 6 пунктов вместо 5 */
+    height: 100%;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-nav-icon {
+    font-size: 18px; /* Уменьшаем размер для компактности */
+    margin-bottom: 3px;
+  }
+
+  .mobile-nav-label {
+    font-size: 9px; /* Уменьшаем размер шрифта */
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /* Форма обратной связи в мобильной версии */
+  .contacts-section {
+    display: block !important;
+    padding: 70px 15px 80px !important;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .contacts-section.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .contacts-content {
+    padding: 15px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .contacts-form-container {
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .contacts-form-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--gold-color);
+  }
+
+  .contacts-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--gold-color);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 16px;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--menu-gold);
+    box-shadow: 0 0 5px rgba(255, 190, 0, 0.5);
+  }
+
+  .contact-method {
+    margin-bottom: 20px;
+  }
+
+  .contact-method label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 0;
+    flex: 1 0 45%;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--gold-color);
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background-color: var(--menu-gold);
+  }
+}

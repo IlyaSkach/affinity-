@@ -458,10 +458,30 @@ document.addEventListener("DOMContentLoaded", () => {
       if (infoText) infoText.style.opacity = "1";
       mainNav.style.opacity = "1";
       updateActiveNavItem();
+
+      // Отключаем обработчики только для мобильных устройств
+      window.removeEventListener("wheel", handleScroll);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     } else {
       document.body.style.overflow = "hidden";
       if (scrollIndicator) {
         scrollIndicator.style.display = "flex";
+      }
+
+      // Для десктопа включаем обработчики (если они не были добавлены)
+      window.addEventListener("wheel", handleScroll, { passive: true });
+      if ("ontouchstart" in window) {
+        document.addEventListener("touchstart", handleTouchStart, {
+          passive: false,
+        });
+        document.addEventListener("touchmove", handleTouchMove, {
+          passive: false,
+        });
+        document.addEventListener("touchend", handleTouchEnd, {
+          passive: false,
+        });
       }
     }
   }
@@ -487,31 +507,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.addEventListener("touchend", handleTouchEnd, { passive: false });
     }
   }
-
-  // Обновляем обработчик изменения размера окна для скролла
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 768) {
-      window.addEventListener("wheel", handleScroll, { passive: true });
-
-      // Для тач-устройств
-      if ("ontouchstart" in window) {
-        document.addEventListener("touchstart", handleTouchStart, {
-          passive: false,
-        });
-        document.addEventListener("touchmove", handleTouchMove, {
-          passive: false,
-        });
-        document.addEventListener("touchend", handleTouchEnd, {
-          passive: false,
-        });
-      }
-    } else {
-      window.removeEventListener("wheel", handleScroll);
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-    }
-  });
 
   // Переключение меню
   function toggleMenu() {
@@ -680,6 +675,7 @@ document.addEventListener("DOMContentLoaded", () => {
           { section: "services", icon: "🛠️", label: "Услуги" },
           { section: "jewelry", icon: "💎", label: "Мерч" },
           { section: "partner", icon: "🤝", label: "Партнерам" },
+          { section: "contacts", icon: "📞", label: "Консультация" },
         ];
 
         // Создаем кнопки для каждой секции
@@ -731,6 +727,8 @@ document.addEventListener("DOMContentLoaded", () => {
               goToJewelrySection();
             } else if (section === "partner") {
               goToPartnerSection();
+            } else if (section === "contacts") {
+              goToContactsSection();
             }
           });
         });
@@ -739,10 +737,17 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.appendChild(navPanel);
       }
 
-      // Отключаем обработчики свайпов, так как теперь используются кнопки
+      // Отключаем обработчики свайпов и скролла для мобильных устройств
+      window.removeEventListener("wheel", handleScroll);
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
+    } else {
+      // Для десктопа удаляем мобильную панель навигации, если она существует
+      const mobilePanel = document.querySelector(".mobile-nav-panel");
+      if (mobilePanel) {
+        mobilePanel.remove();
+      }
     }
   }
 
@@ -764,6 +769,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (section === "jewelry" && currentSection === jewelrySection) {
         button.classList.add("active");
       } else if (section === "partner" && currentSection === partnerSection) {
+        button.classList.add("active");
+      } else if (section === "contacts" && currentSection === contactsSection) {
         button.classList.add("active");
       }
     });
