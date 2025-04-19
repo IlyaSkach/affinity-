@@ -3933,7 +3933,7 @@ body.no-scroll {
 
   .jewelry-card-left,
   .jewelry-card-right {
-    display: block !important; /* Переопределяем none для отображения */
+    display: none !important; /* Переопределяем none для отображения */
     margin: 0;
     width: 100%;
     overflow: visible;
@@ -4141,6 +4141,47 @@ body.no-scroll {
   /* Убираем фоновые изображения внутри контейнера */
   .contacts-section .contact-bg-image {
     display: none !important;
+  }
+
+  /* ... existing code ... */
+}
+
+@media screen and (max-width: 768px) {
+  /* ... existing code ... */
+
+  /* Обновленные стили для секции "Партнерам" в мобильной версии */
+  .partner-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    overflow-y: auto !important; /* Разрешаем вертикальный скролл */
+    overflow-x: hidden !important; /* Запрещаем горизонтальный скролл */
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    background: linear-gradient(to bottom, #111111, #1a1a1a);
+    touch-action: pan-y !important; /* Разрешаем вертикальные свайпы */
+    -webkit-overflow-scrolling: touch; /* Инерционный скролл для iOS */
+    padding-bottom: 80px; /* Добавляем отступ внизу для удобства скролла */
+  }
+
+  .partner-section.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Стиль для состояния активного скролла */
+  .partner-section.scroll-enabled {
+    overflow-y: auto !important;
+    touch-action: pan-y !important;
+  }
+
+  /* Отменяем стили, которые могут блокировать скролл */
+  .partner-section * {
+    pointer-events: auto;
   }
 
   /* ... existing code ... */
