@@ -28,6 +28,722 @@ document.addEventListener("DOMContentLoaded", () => {
   // Вызываем инициализацию при загрузке
   initializeMenu();
 
+  // Проверка мобильной версии и настройка соответствующих стилей
+  function checkMobileView() {
+    const isMobile = window.innerWidth <= 768;
+    const body = document.body;
+    const mainNav = document.querySelector(".main-nav");
+    const mobileNavPanel = document.querySelector(".mobile-nav-panel");
+    const videoElements = document.querySelectorAll("video");
+    const allSections = document.querySelectorAll("section");
+    const heroSection = document.querySelector(".hero-section");
+    const showcaseSection = document.querySelector(".showcase-section");
+
+    if (isMobile) {
+      // Добавляем класс для мобильной версии
+      body.classList.add("mobile-view");
+
+      // Устанавливаем фон на body
+      body.style.backgroundImage = "url('Images/affinitybg.png')";
+      body.style.backgroundSize = "cover";
+      body.style.backgroundPosition = "center";
+      body.style.backgroundAttachment = "fixed";
+
+      // Сбрасываем стили навигации если меню не активно
+      if (mainNav && !mainNav.classList.contains("active")) {
+        mainNav.style.display = "none";
+      }
+
+      // Скрываем видео на мобильной версии
+      videoElements.forEach((video) => {
+        video.style.display = "none";
+      });
+
+      // Убираем нижнее меню навигации
+      if (mobileNavPanel) {
+        mobileNavPanel.style.display = "none";
+      }
+
+      // Скрываем главную страницу
+      if (heroSection) {
+        heroSection.style.display = "none";
+      }
+
+      if (showcaseSection) {
+        showcaseSection.style.display = "none";
+      }
+
+      // Убираем фоны секций, так как фон установлен на body
+      allSections.forEach((section) => {
+        if (!section.classList.contains("contacts-section")) {
+          section.style.backgroundImage = "none";
+          section.style.backgroundColor = "transparent";
+        }
+      });
+
+      // Включаем обычный скролл между секциями
+      body.style.overflow = "auto";
+      body.style.overflowX = "hidden";
+
+      // Показываем все секции для скролла кроме главной
+      document
+        .querySelectorAll("section:not(.hero-section):not(.showcase-section)")
+        .forEach((section) => {
+          section.style.display = "block";
+          section.style.position = "relative";
+          section.style.top = "auto";
+          section.style.left = "auto";
+          section.style.width = "100%";
+          section.style.height = "auto";
+          section.style.minHeight = "auto"; // Убираем минимальную высоту
+          section.style.opacity = "1";
+          section.style.visibility = "visible";
+          section.style.overflow = "visible";
+          section.style.zIndex = "1";
+          section.style.paddingTop = "20px";
+          section.style.paddingBottom = "20px";
+          section.style.marginTop = "0";
+          section.style.marginBottom = "0";
+          section.style.boxSizing = "border-box";
+        });
+
+      // Добавляем заголовки к секциям, если их нет
+      const aboutSection = document.querySelector(".about-section");
+      if (
+        aboutSection &&
+        !aboutSection.querySelector(".mobile-section-title")
+      ) {
+        const titleDiv = document.createElement("h2");
+        titleDiv.className = "mobile-section-title";
+        titleDiv.textContent = "О нас";
+        titleDiv.style.textAlign = "center";
+        titleDiv.style.color = "#ffbe00";
+        titleDiv.style.margin = "0 0 20px 0";
+        titleDiv.style.fontSize = "24px";
+        aboutSection.insertBefore(titleDiv, aboutSection.firstChild);
+      }
+
+      const servicesSection = document.querySelector(".services-section");
+      if (
+        servicesSection &&
+        !servicesSection.querySelector(".mobile-section-title")
+      ) {
+        const titleDiv = document.createElement("h2");
+        titleDiv.className = "mobile-section-title";
+        titleDiv.textContent = "Производство и сервис";
+        titleDiv.style.textAlign = "center";
+        titleDiv.style.color = "#ffbe00";
+        titleDiv.style.margin = "0 0 20px 0";
+        titleDiv.style.fontSize = "24px";
+        servicesSection.insertBefore(titleDiv, servicesSection.firstChild);
+      }
+
+      const jewelrySection = document.querySelector(".jewelry-section");
+      if (
+        jewelrySection &&
+        !jewelrySection.querySelector(".mobile-section-title")
+      ) {
+        const titleDiv = document.createElement("h2");
+        titleDiv.className = "mobile-section-title";
+        titleDiv.textContent = "Ювелирный мерч";
+        titleDiv.style.textAlign = "center";
+        titleDiv.style.color = "#ffbe00";
+        titleDiv.style.margin = "0 0 20px 0";
+        titleDiv.style.fontSize = "24px";
+        jewelrySection.insertBefore(titleDiv, jewelrySection.firstChild);
+      }
+
+      const partnerSection = document.querySelector(".partner-section");
+      if (
+        partnerSection &&
+        !partnerSection.querySelector(".mobile-section-title")
+      ) {
+        const titleDiv = document.createElement("h2");
+        titleDiv.className = "mobile-section-title";
+        titleDiv.textContent = "Партнерская программа";
+        titleDiv.style.textAlign = "center";
+        titleDiv.style.color = "#ffbe00";
+        titleDiv.style.margin = "0 0 20px 0";
+        titleDiv.style.fontSize = "24px";
+        partnerSection.insertBefore(titleDiv, partnerSection.firstChild);
+      }
+
+      const contactsSection = document.querySelector(".contacts-section");
+      if (
+        contactsSection &&
+        !contactsSection.querySelector(".mobile-section-title")
+      ) {
+        const titleDiv = document.createElement("h2");
+        titleDiv.className = "mobile-section-title";
+        titleDiv.textContent = "Консультация";
+        titleDiv.style.textAlign = "center";
+        titleDiv.style.color = "#ffbe00";
+        titleDiv.style.margin = "0 0 20px 0";
+        titleDiv.style.fontSize = "24px";
+        contactsSection.insertBefore(titleDiv, contactsSection.firstChild);
+      }
+
+      // Убираем отступы между секциями и подложку партнерской программы
+      applyMobileStyles();
+
+      // Настройка секции "Ювелирный мерч" для мобильной версии
+      const jewelryLayout = document.querySelector(".jewelry-layout");
+      if (jewelryLayout) {
+        // Проверяем, если уже есть слайдер и карточки
+        const slider = jewelryLayout.querySelector(".about-slider");
+        const leftCard = jewelryLayout.querySelector(".jewelry-card-left");
+        const rightCard = jewelryLayout.querySelector(".jewelry-card-right");
+
+        // Если нет какого-либо элемента, восстанавливаем оригинальное содержимое
+        if (!slider || !leftCard || !rightCard) {
+          const originalContent = jewelryLayout.getAttribute(
+            "data-desktop-content"
+          );
+          if (originalContent) {
+            jewelryLayout.innerHTML = originalContent;
+          }
+        }
+
+        // Переупорядочиваем элементы для мобильной версии
+        setTimeout(() => {
+          const updatedSlider = jewelryLayout.querySelector(".about-slider");
+          const updatedLeftCard =
+            jewelryLayout.querySelector(".jewelry-card-left");
+          const updatedRightCard = jewelryLayout.querySelector(
+            ".jewelry-card-right"
+          );
+
+          if (updatedSlider && updatedLeftCard && updatedRightCard) {
+            // Устанавливаем CSS для mobilе вида
+            jewelryLayout.style.display = "flex";
+            jewelryLayout.style.flexDirection = "column";
+
+            // Ставим слайдер первым
+            updatedSlider.style.order = "1";
+            updatedSlider.style.width = "100%";
+            updatedSlider.style.maxWidth = "100%";
+            updatedSlider.style.margin = "0 0 20px 0";
+
+            // Адаптируем карточку "Персонализированная упаковка"
+            updatedLeftCard.style.order = "2";
+            updatedLeftCard.style.maxWidth = "100%";
+            updatedLeftCard.style.width = "calc(100% - 40px)";
+            updatedLeftCard.style.margin = "0 20px 20px 20px";
+            updatedLeftCard.style.backgroundColor = "#313233";
+            updatedLeftCard.style.borderRadius = "15px";
+            updatedLeftCard.style.padding = "20px";
+            updatedLeftCard.style.boxSizing = "border-box";
+            updatedLeftCard.style.fontSize = "14px";
+
+            // Добавляем адаптацию текстовых элементов внутри карточки
+            const leftCardText = updatedLeftCard.querySelectorAll(
+              "p, h1, h2, h3, h4, h5, h6"
+            );
+            leftCardText.forEach((element) => {
+              if (element.tagName === "H3") {
+                element.style.fontSize = "18px";
+                element.style.marginBottom = "15px";
+                element.style.textAlign = "center";
+              } else {
+                element.style.fontSize = "14px";
+                element.style.lineHeight = "1.4";
+                element.style.marginBottom = "10px";
+                element.style.wordWrap = "break-word";
+                element.style.maxWidth = "100%";
+              }
+
+              // Для блоков с классом note делаем меньший шрифт
+              if (element.classList.contains("note")) {
+                element.style.fontSize = "12px";
+                element.style.color = "#aaa";
+              }
+            });
+
+            // Ставим карточку "Зачем нужен мерч?" третьей
+            updatedRightCard.style.order = "3";
+            updatedRightCard.style.maxWidth = "100%";
+            updatedRightCard.style.width = "calc(100% - 40px)";
+            updatedRightCard.style.margin = "0 20px 20px 20px";
+            updatedRightCard.style.backgroundColor = "#313233";
+            updatedRightCard.style.borderRadius = "15px";
+            updatedRightCard.style.padding = "20px";
+            updatedRightCard.style.boxSizing = "border-box";
+            updatedRightCard.style.fontSize = "14px";
+
+            // Добавляем адаптацию текстовых элементов внутри карточки
+            const rightCardText = updatedRightCard.querySelectorAll(
+              "p, h1, h2, h3, h4, h5, h6"
+            );
+            rightCardText.forEach((element) => {
+              if (element.tagName === "H3") {
+                element.style.fontSize = "18px";
+                element.style.marginBottom = "15px";
+                element.style.textAlign = "center";
+              } else {
+                element.style.fontSize = "14px";
+                element.style.lineHeight = "1.4";
+                element.style.marginBottom = "10px";
+                element.style.wordWrap = "break-word";
+                element.style.maxWidth = "100%";
+              }
+            });
+          }
+        }, 100);
+      }
+
+      // Убираем скрытие секций
+      document.querySelectorAll(".visible").forEach((section) => {
+        section.classList.remove("visible");
+      });
+
+      document.querySelectorAll(".hidden").forEach((section) => {
+        section.classList.remove("hidden");
+      });
+
+      document.querySelectorAll(".fade").forEach((section) => {
+        section.classList.remove("fade");
+      });
+
+      document.querySelectorAll(".fullscreen").forEach((section) => {
+        section.classList.remove("fullscreen");
+      });
+
+      // Отключаем десктопные обработчики событий скролла и свайпа
+      window.removeEventListener("wheel", handleScroll);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+
+      // Настройка карточек в секции "Производство и сервис" для мобильной версии
+      if (servicesSection) {
+        // Удаляем созданные ранее мобильные карточки (если есть)
+        document.querySelectorAll(".mobile-services-card").forEach((card) => {
+          card.remove();
+        });
+
+        // Находим оригинальные карточки
+        const servicesCards =
+          servicesSection.querySelectorAll(".services-card");
+
+        // Делаем их видимыми и стилизуем для мобильной версии
+        servicesCards.forEach((card) => {
+          card.style.opacity = "1";
+          card.style.visibility = "visible";
+          card.style.width = "calc(100% - 40px)";
+          card.style.margin = "10px 20px";
+          card.style.borderRadius = "15px";
+          card.style.backgroundColor = "#313233";
+          card.style.padding = "15px";
+          card.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
+          card.style.color = "#ffffff";
+          card.style.cursor = "pointer";
+          card.style.zIndex = "5";
+          card.style.textAlign = "center";
+
+          // Находим все текстовые элементы внутри карточки и центрируем их
+          const textElements = card.querySelectorAll(
+            "p, h1, h2, h3, h4, h5, h6, span, div"
+          );
+          textElements.forEach((element) => {
+            element.style.textAlign = "center";
+          });
+
+          // Удаляем подсказку "Нажмите для подробностей", если она была добавлена ранее
+          const tapHint = card.querySelector(".tap-hint");
+          if (tapHint) {
+            tapHint.remove();
+          }
+        });
+      }
+    } else {
+      // Возвращаем стандартные стили для десктопа
+      restoreDesktopStyles();
+
+      if (mainNav) {
+        mainNav.style.display = "";
+      }
+
+      // Показываем главную страницу в десктопе
+      if (heroSection) {
+        heroSection.style.display = "";
+      }
+
+      if (showcaseSection) {
+        showcaseSection.style.display = "";
+      }
+
+      // Показываем видео на десктопе
+      videoElements.forEach((video) => {
+        video.style.display = "";
+      });
+
+      // Убираем добавленные заголовки секций
+      document.querySelectorAll(".mobile-section-title").forEach((title) => {
+        title.remove();
+      });
+
+      // Убираем установленные для мобильной версии стили
+      document.querySelectorAll("section").forEach((section) => {
+        section.style.backgroundImage = "";
+        section.style.backgroundColor = "";
+        section.style.display = "";
+        section.style.position = "";
+        section.style.top = "";
+        section.style.left = "";
+        section.style.width = "";
+        section.style.height = "";
+        section.style.minHeight = "";
+        section.style.padding = "";
+        section.style.paddingTop = "";
+        section.style.paddingBottom = "";
+        section.style.marginTop = "";
+        section.style.marginBottom = "";
+        section.style.boxSizing = "";
+        section.style.opacity = "";
+        section.style.visibility = "";
+        section.style.overflow = "";
+        section.style.zIndex = "";
+      });
+
+      // Возвращаем стандартное расположение элементов в секции "Ювелирный мерч"
+      const jewelryLayout = document.querySelector(".jewelry-layout");
+      if (jewelryLayout) {
+        const slider = jewelryLayout.querySelector(".about-slider");
+        const leftCard = jewelryLayout.querySelector(".jewelry-card-left");
+        const rightCard = jewelryLayout.querySelector(".jewelry-card-right");
+
+        if (slider && leftCard && rightCard) {
+          jewelryLayout.style.display = "";
+          jewelryLayout.style.flexDirection = "";
+
+          slider.style.order = "";
+          slider.style.width = "";
+          slider.style.maxWidth = "";
+          slider.style.margin = "";
+
+          leftCard.style.order = "";
+          leftCard.style.maxWidth = "";
+          leftCard.style.width = "";
+          leftCard.style.margin = "";
+          leftCard.style.backgroundColor = "";
+          leftCard.style.borderRadius = "";
+          leftCard.style.padding = "";
+          leftCard.style.boxSizing = "";
+          leftCard.style.fontSize = "";
+
+          // Сбрасываем стили для всех текстовых элементов
+          const leftCardText = leftCard.querySelectorAll(
+            "p, h1, h2, h3, h4, h5, h6"
+          );
+          leftCardText.forEach((element) => {
+            element.style.fontSize = "";
+            element.style.lineHeight = "";
+            element.style.marginBottom = "";
+            element.style.wordWrap = "";
+            element.style.maxWidth = "";
+            element.style.textAlign = "";
+            element.style.color = "";
+          });
+
+          rightCard.style.order = "";
+          rightCard.style.maxWidth = "";
+          rightCard.style.width = "";
+          rightCard.style.margin = "";
+          rightCard.style.backgroundColor = "";
+          rightCard.style.borderRadius = "";
+          rightCard.style.padding = "";
+          rightCard.style.boxSizing = "";
+          rightCard.style.fontSize = "";
+
+          // Сбрасываем стили для всех текстовых элементов
+          const rightCardText = rightCard.querySelectorAll(
+            "p, h1, h2, h3, h4, h5, h6"
+          );
+          rightCardText.forEach((element) => {
+            element.style.fontSize = "";
+            element.style.lineHeight = "";
+            element.style.marginBottom = "";
+            element.style.wordWrap = "";
+            element.style.maxWidth = "";
+            element.style.textAlign = "";
+          });
+        }
+      }
+
+      // Восстанавливаем оригинальные стили для карточек в секции "Производство и сервис"
+      const servicesCards = document.querySelectorAll(".services-card");
+      servicesCards.forEach((card) => {
+        card.style.display = "";
+        card.style.opacity = "";
+        card.style.visibility = "";
+        card.style.width = "";
+        card.style.margin = "";
+        card.style.borderRadius = "";
+        card.style.backgroundColor = "";
+        card.style.padding = "";
+        card.style.boxShadow = "";
+        card.style.color = "";
+        card.style.cursor = "";
+        card.style.zIndex = "";
+        card.style.textAlign = "";
+
+        // Восстанавливаем оригинальное выравнивание для всех текстовых элементов
+        const textElements = card.querySelectorAll(
+          "p, h1, h2, h3, h4, h5, h6, span, div"
+        );
+        textElements.forEach((element) => {
+          element.style.textAlign = "";
+        });
+
+        // Удаляем подсказки для тапа в десктопной версии
+        const tapHint = card.querySelector(".tap-hint");
+        if (tapHint) {
+          tapHint.remove();
+        }
+      });
+
+      // Получаем ссылки на секции
+      const sectionsForDesktop = {
+        partner: document.querySelector(".partner-section"),
+        contacts: document.querySelector(".contacts-section"),
+      };
+
+      // Восстанавливаем стили секции "Партнерская программа" для десктопной версии
+      if (sectionsForDesktop.partner) {
+        sectionsForDesktop.partner.style.removeProperty(
+          "--partner-overlay-opacity"
+        );
+        sectionsForDesktop.partner.style.backgroundColor = "";
+
+        // Возвращаем отображение фоновых изображений
+        const partnerBgImages =
+          sectionsForDesktop.partner.querySelectorAll(".partner-bg-image");
+        partnerBgImages.forEach((img) => {
+          img.style.display = "";
+        });
+
+        // Удаляем добавленные стили
+        const mobileStyles = document.querySelector(".mobile-custom-styles");
+        if (mobileStyles) {
+          mobileStyles.remove();
+        }
+
+        // Восстанавливаем отступы
+        sectionsForDesktop.partner.style.marginTop = "";
+        sectionsForDesktop.partner.style.paddingTop = "";
+      }
+
+      // Восстанавливаем отступы для секции "Консультация"
+      if (sectionsForDesktop.contacts) {
+        sectionsForDesktop.contacts.style.marginBottom = "";
+        sectionsForDesktop.contacts.style.paddingBottom = "";
+      }
+    }
+  }
+
+  // Вспомогательная функция для применения мобильных стилей
+  function applyMobileStyles() {
+    // Получаем все секции
+    const allSections = document.querySelectorAll("section");
+
+    // Применяем стили ко всем секциям на мобильной версии
+    allSections.forEach((section) => {
+      // Убираем все отступы и фиксированные размеры
+      section.style.marginTop = "0";
+      section.style.marginBottom = "0";
+      section.style.paddingTop = "0";
+      section.style.paddingBottom = "0";
+
+      // Устраняем фиксированную высоту и позицию
+      section.style.position = "relative";
+      section.style.height = "auto";
+      section.style.minHeight = "auto";
+      section.style.transform = "none";
+      section.style.top = "auto";
+      section.style.left = "auto";
+
+      // Устанавливаем корректную видимость
+      section.style.opacity = "1";
+      section.style.visibility = "visible";
+
+      // Уменьшаем отступы для заголовка секции
+      const sectionTitle = section.querySelector(".mobile-section-title");
+      if (sectionTitle) {
+        sectionTitle.style.margin = "5px 0 10px 0";
+      }
+    });
+
+    // Фиксим подложку в секции "Партнерская программа"
+    const partnerSection = document.querySelector(".partner-section");
+    if (partnerSection) {
+      partnerSection.style.setProperty("--partner-overlay-opacity", "0");
+      partnerSection.style.backgroundColor = "transparent";
+
+      // Скрываем фоновые изображения, если они есть
+      const partnerBgImages =
+        partnerSection.querySelectorAll(".partner-bg-image");
+      partnerBgImages.forEach((img) => {
+        img.style.display = "none";
+      });
+    }
+
+    // Добавляем специальные стили для мобильной версии
+    if (!document.querySelector(".mobile-custom-styles")) {
+      const styleEl = document.createElement("style");
+      styleEl.className = "mobile-custom-styles";
+      styleEl.textContent = `
+        @media screen and (max-width: 768px) {
+          /* Общие стили для всех секций */
+          section {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            position: relative !important;
+            transform: none !important;
+            height: auto !important;
+            min-height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            top: auto !important;
+            left: auto !important;
+          }
+          
+          /* Стили для заголовков секций */
+          .mobile-section-title {
+            margin: 5px 0 10px 0 !important;
+            padding: 0 !important;
+          }
+          
+          /* Уменьшаем отступы у контейнеров внутри секций */
+          .about-content,
+          .services-content,
+          .jewelry-content,
+          .partner-content,
+          .contacts-content {
+            padding: 5px !important;
+            margin: 0 !important;
+          }
+          
+          /* Стили для содержимого секций */
+          .about-grid,
+          .services-grid,
+          .jewelry-layout,
+          .partner-blocks,
+          .contacts-form-container {
+            padding: 5px !important;
+            margin: 0 !important;
+          }
+          
+          /* Убираем подложку партнерской программы */
+          .partner-section::before {
+            opacity: 0 !important;
+            display: none !important;
+          }
+          
+          /* Скрываем элементы, добавляющие отступы */
+          .scroll-indicator,
+          section::before,
+          section::after {
+            display: none !important;
+          }
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+
+    // Исправление для правильного расположения секций в DOM
+    const sectionsArr = Array.from(allSections);
+    // Фильтруем секции, которые должны отображаться (не hero и не showcase)
+    const visibleSections = sectionsArr.filter(
+      (section) =>
+        !section.classList.contains("hero-section") &&
+        !section.classList.contains("showcase-section")
+    );
+
+    // Переупорядочиваем секции в DOM, чтобы они шли одна за другой
+    const container = document.querySelector(".container");
+    if (container && visibleSections.length > 1) {
+      for (let i = 1; i < visibleSections.length; i++) {
+        visibleSections[i - 1].insertAdjacentElement(
+          "afterend",
+          visibleSections[i]
+        );
+      }
+    }
+
+    // Дополнительная фиксация вложенных контейнеров
+    document
+      .querySelectorAll(
+        ".jewelry-card, .about-item, .services-card, .partner-block"
+      )
+      .forEach((card) => {
+        card.style.margin = "5px 0";
+        card.style.padding = "10px";
+      });
+  }
+
+  // Вспомогательная функция для восстановления стилей для десктопа
+  function restoreDesktopStyles() {
+    // Восстанавливаем стили всех секций
+    document.querySelectorAll("section").forEach((section) => {
+      section.style.marginTop = "";
+      section.style.marginBottom = "";
+      section.style.paddingTop = "";
+      section.style.paddingBottom = "";
+      section.style.position = "";
+      section.style.height = "";
+      section.style.minHeight = "";
+      section.style.transform = "";
+      section.style.top = "";
+      section.style.left = "";
+      section.style.opacity = "";
+      section.style.visibility = "";
+
+      // Восстанавливаем стили заголовков
+      const sectionTitle = section.querySelector(".mobile-section-title");
+      if (sectionTitle) {
+        sectionTitle.style.margin = "";
+      }
+    });
+
+    // Восстанавливаем стили секции "Партнерская программа"
+    const partnerSection = document.querySelector(".partner-section");
+    if (partnerSection) {
+      partnerSection.style.removeProperty("--partner-overlay-opacity");
+      partnerSection.style.backgroundColor = "";
+
+      // Возвращаем отображение фоновых изображений
+      const partnerBgImages =
+        partnerSection.querySelectorAll(".partner-bg-image");
+      partnerBgImages.forEach((img) => {
+        img.style.display = "";
+      });
+    }
+
+    // Восстанавливаем стили вложенных контейнеров
+    document
+      .querySelectorAll(
+        ".jewelry-card, .about-item, .services-card, .partner-block"
+      )
+      .forEach((card) => {
+        card.style.margin = "";
+        card.style.padding = "";
+      });
+
+    // Удаляем добавленные стили
+    const mobileStyles = document.querySelector(".mobile-custom-styles");
+    if (mobileStyles) {
+      mobileStyles.remove();
+    }
+  }
+
+  // Вызываем функцию при загрузке страницы и при изменении размера окна
+  checkMobileView();
+  window.addEventListener("resize", checkMobileView);
+
   // Инициализация переменных
   let isFullscreen = false;
   let isScrolling = false;
@@ -442,22 +1158,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // Сброс стилей для мобильных устройств
   function resetMobileStyles() {
     if (window.innerWidth <= 768) {
-      showcaseSection.classList.remove("fullscreen");
-      heroSection.classList.remove("fade");
-      aboutSection.classList.remove("visible");
-      servicesSection.classList.remove("visible");
-      jewelrySection.classList.remove("visible");
-      partnerSection.classList.remove("visible");
-      contactsSection.classList.remove("visible");
-      isFullscreen = false;
-      currentSection = showcaseSection;
+      // Отключаем стандартное поведение переключения секций для мобильных устройств
       document.body.style.overflow = "auto";
+      document.body.style.overflowX = "hidden";
+
       if (scrollIndicator) {
         scrollIndicator.style.display = "none";
       }
-      if (infoText) infoText.style.opacity = "1";
-      mainNav.style.opacity = "1";
-      updateActiveNavItem();
+
+      // Отображаем все секции для возможности скролла
+      document.querySelectorAll("section").forEach((section) => {
+        section.style.display = "block";
+        section.style.position = "relative";
+        section.style.opacity = "1";
+        section.style.visibility = "visible";
+      });
 
       // Отключаем обработчики только для мобильных устройств
       window.removeEventListener("wheel", handleScroll);
@@ -596,9 +1311,125 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (window.innerWidth <= 768) {
         closeMenu();
+
+        // Добавляем прокрутку к соответствующей секции для мобильной версии
+        scrollToSectionMobile(section);
       }
     });
   });
+
+  // Функция для прокрутки к секции в мобильной версии
+  function scrollToSectionMobile(sectionName) {
+    if (window.innerWidth > 768) return;
+
+    let targetSection;
+
+    if (sectionName === "about") {
+      targetSection = document.querySelector(".about-section");
+    } else if (sectionName === "services") {
+      targetSection = document.querySelector(".services-section");
+    } else if (sectionName === "jewelry") {
+      targetSection = document.querySelector(".jewelry-section");
+    } else if (sectionName === "partner") {
+      targetSection = document.querySelector(".partner-section");
+    } else if (sectionName === "contacts") {
+      targetSection = document.querySelector(".contacts-section");
+    } else if (sectionName === "home") {
+      // Прокручиваем к верху страницы
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    if (targetSection) {
+      // Прокручиваем к выбранной секции с плавной анимацией
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      // Добавляем задержку для лучшего UX
+      setTimeout(() => {
+        // Делаем все секции видимыми
+        document.querySelectorAll("section").forEach((section) => {
+          section.style.opacity = "1";
+          section.style.visibility = "visible";
+        });
+
+        // Выделяем активную секцию для лучшей видимости
+        targetSection.style.position = "relative";
+        targetSection.style.zIndex = "5";
+
+        // Обновляем активный пункт навигации
+        updateActiveNavItem();
+      }, 300);
+    }
+  }
+
+  // Обновляем функцию goToAboutSection для поддержки мобильной версии
+  const originalGoToAboutSection = goToAboutSection;
+  goToAboutSection = function () {
+    if (window.innerWidth <= 768) {
+      scrollToSectionMobile("about");
+    } else {
+      originalGoToAboutSection();
+    }
+  };
+
+  // Обновляем функцию goToServicesSection для поддержки мобильной версии
+  const originalGoToServicesSection = goToServicesSection;
+  goToServicesSection = function () {
+    if (window.innerWidth <= 768) {
+      scrollToSectionMobile("services");
+    } else {
+      originalGoToServicesSection();
+    }
+  };
+
+  // Обновляем функцию goToJewelrySection для поддержки мобильной версии
+  const originalGoToJewelrySection = goToJewelrySection;
+  goToJewelrySection = function () {
+    if (window.innerWidth <= 768) {
+      scrollToSectionMobile("jewelry");
+    } else {
+      originalGoToJewelrySection();
+    }
+  };
+
+  // Обновляем функцию goToPartnerSection для поддержки мобильной версии
+  const originalGoToPartnerSection = goToPartnerSection;
+  goToPartnerSection = function () {
+    if (window.innerWidth <= 768) {
+      scrollToSectionMobile("partner");
+    } else {
+      originalGoToPartnerSection();
+    }
+  };
+
+  // Обновляем функцию goToContactsSection для поддержки мобильной версии
+  const originalGoToContactsSection = goToContactsSection;
+  goToContactsSection = function () {
+    if (window.innerWidth <= 768) {
+      scrollToSectionMobile("contacts");
+    } else {
+      originalGoToContactsSection();
+    }
+  };
+
+  // Обновляем функцию goToHomeSection для поддержки мобильной версии
+  const originalGoToHomeSection = goToHomeSection;
+  goToHomeSection = function () {
+    if (window.innerWidth <= 768) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } else {
+      originalGoToHomeSection();
+    }
+  };
 
   // Инициализация аккордеона
   const accordionHeaders = document.querySelectorAll(".services-header");
@@ -660,81 +1491,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Функция для добавления нижней мобильной навигации вместо свайпов
   function initMobileBottomNav() {
-    // Проверяем ширину экрана
+    // В мобильной версии мы отключаем нижнюю навигацию
     if (window.innerWidth <= 768) {
-      // Проверяем, существует ли уже панель
-      if (!document.querySelector(".mobile-nav-panel")) {
-        // Создаем панель навигации
-        const navPanel = document.createElement("div");
-        navPanel.className = "mobile-nav-panel";
-
-        // Массив с данными для кнопок (секция, иконка, название)
-        const navButtons = [
-          { section: "home", icon: "🏠", label: "Главная" },
-          { section: "about", icon: "ℹ️", label: "О нас" },
-          { section: "services", icon: "🛠️", label: "Услуги" },
-          { section: "jewelry", icon: "💎", label: "Мерч" },
-          { section: "partner", icon: "🤝", label: "Партнерам" },
-          { section: "contacts", icon: "📞", label: "Консультация" },
-        ];
-
-        // Создаем кнопки для каждой секции
-        navButtons.forEach((button) => {
-          const navButton = document.createElement("a");
-          navButton.href = "#";
-          navButton.className = "mobile-nav-button";
-          navButton.setAttribute("data-section", button.section);
-
-          // Если это главная страница и мы на ней, добавляем класс active
-          if (button.section === "home" && !currentSection) {
-            navButton.classList.add("active");
-          }
-
-          const navIcon = document.createElement("span");
-          navIcon.className = "mobile-nav-icon";
-          navIcon.textContent = button.icon;
-
-          const navLabel = document.createElement("span");
-          navLabel.className = "mobile-nav-label";
-          navLabel.textContent = button.label;
-
-          navButton.appendChild(navIcon);
-          navButton.appendChild(navLabel);
-          navPanel.appendChild(navButton);
-
-          // Добавляем обработчик события
-          navButton.addEventListener("click", function (e) {
-            e.preventDefault();
-
-            // Убираем класс active у всех кнопок
-            document.querySelectorAll(".mobile-nav-button").forEach((btn) => {
-              btn.classList.remove("active");
-            });
-
-            // Добавляем класс active текущей кнопке
-            this.classList.add("active");
-
-            // Переходим к соответствующей секции
-            const section = this.getAttribute("data-section");
-
-            if (section === "home") {
-              goToHomeSection();
-            } else if (section === "about") {
-              goToAboutSection();
-            } else if (section === "services") {
-              goToServicesSection();
-            } else if (section === "jewelry") {
-              goToJewelrySection();
-            } else if (section === "partner") {
-              goToPartnerSection();
-            } else if (section === "contacts") {
-              goToContactsSection();
-            }
-          });
-        });
-
-        // Добавляем панель на страницу
-        document.body.appendChild(navPanel);
+      const mobilePanel = document.querySelector(".mobile-nav-panel");
+      if (mobilePanel) {
+        mobilePanel.style.display = "none";
       }
 
       // Отключаем обработчики свайпов и скролла для мобильных устройств
@@ -742,12 +1503,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
-    } else {
-      // Для десктопа удаляем мобильную панель навигации, если она существует
-      const mobilePanel = document.querySelector(".mobile-nav-panel");
-      if (mobilePanel) {
-        mobilePanel.remove();
-      }
     }
   }
 
@@ -775,37 +1530,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-  // Обновляем функции для перехода между разделами
-  const originalGoToAboutSection = goToAboutSection;
-  goToAboutSection = function () {
-    originalGoToAboutSection();
-    updateMobileNavButton();
-  };
-
-  const originalGoToServicesSection = goToServicesSection;
-  goToServicesSection = function () {
-    originalGoToServicesSection();
-    updateMobileNavButton();
-  };
-
-  const originalGoToJewelrySection = goToJewelrySection;
-  goToJewelrySection = function () {
-    originalGoToJewelrySection();
-    updateMobileNavButton();
-  };
-
-  const originalGoToPartnerSection = goToPartnerSection;
-  goToPartnerSection = function () {
-    originalGoToPartnerSection();
-    updateMobileNavButton();
-  };
-
-  const originalGoToHomeSection = goToHomeSection;
-  goToHomeSection = function () {
-    originalGoToHomeSection();
-    updateMobileNavButton();
-  };
 
   // Вызываем функцию инициализации при загрузке страницы
   initMobileBottomNav();

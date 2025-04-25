@@ -2053,7 +2053,7 @@ body.no-scroll {
     max-width: 100%;
     width: 100%;
     height: auto;
-    max-height: 300px;
+    /* max-height: 300px; */
   }
 
   .jewelry-card-left {
@@ -3933,7 +3933,7 @@ body.no-scroll {
 
   .jewelry-card-left,
   .jewelry-card-right {
-    display: none !important; /* Переопределяем none для отображения */
+    /* display: none !important; */
     margin: 0;
     width: 100%;
     overflow: visible;
