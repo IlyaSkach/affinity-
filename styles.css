@@ -2077,7 +2077,7 @@ body.no-scroll {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.8);
-  width: 600px;
+  width: 700px;
   max-width: 90vw;
   background-color: var(--bg-color);
   border-radius: 15px;
@@ -2103,7 +2103,7 @@ body.no-scroll {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 5px 20px;
   border-bottom: 1px solid var(--gold-color);
   background-color: var(--gold-color);
 }
@@ -2130,7 +2130,7 @@ body.no-scroll {
 }
 
 .modal-content {
-  padding: 20px;
+  padding: 10px 20px;
   overflow-y: auto;
   flex: 1;
   text-align: left;
@@ -2142,13 +2142,13 @@ body.no-scroll {
 
 .modal-content ul,
 .modal-content ol {
-  margin: 15px 0;
+  margin: 7px 0;
   padding-left: 20px;
 }
 
 .modal-content ul li,
 .modal-content ol li {
-  margin-bottom: 10px;
+  margin-bottom: 7px;
   position: relative;
 }
 
@@ -2194,7 +2194,7 @@ body.no-scroll {
   }
 
   .modal-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     border-bottom: none;
     background-color: transparent;
     padding: 0;
@@ -3770,7 +3770,7 @@ body.no-scroll {
     border-radius: 8px;
     border: 1px solid var(--gold-color);
     background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: black;
     font-size: 16px;
   }
 

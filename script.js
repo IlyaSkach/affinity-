@@ -851,6 +851,12 @@ document.addEventListener("DOMContentLoaded", () => {
     partnerSection.classList.remove("visible");
     contactsSection.classList.remove("visible");
 
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
+
     // Скрываем элементы сначала
     if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
@@ -876,6 +882,12 @@ document.addEventListener("DOMContentLoaded", () => {
     jewelrySection.classList.remove("visible");
     partnerSection.classList.remove("visible");
     contactsSection.classList.remove("visible");
+
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
 
     // Скрываем элементы сначала
     if (infoText) infoText.style.opacity = "0";
@@ -903,6 +915,12 @@ document.addEventListener("DOMContentLoaded", () => {
     partnerSection.classList.remove("visible");
     contactsSection.classList.remove("visible");
 
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
+
     // Скрываем элементы сначала
     if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
@@ -928,6 +946,12 @@ document.addEventListener("DOMContentLoaded", () => {
     jewelrySection.classList.remove("visible");
     partnerSection.classList.add("visible");
     contactsSection.classList.remove("visible");
+
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
 
     // Скрываем элементы сначала
     if (infoText) infoText.style.opacity = "0";
@@ -955,6 +979,12 @@ document.addEventListener("DOMContentLoaded", () => {
     partnerSection.classList.remove("visible");
     contactsSection.classList.add("visible");
 
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
+
     // Скрываем элементы сначала
     if (infoText) infoText.style.opacity = "0";
     mainNav.style.opacity = "0";
@@ -966,6 +996,32 @@ document.addEventListener("DOMContentLoaded", () => {
       mainNav.style.opacity = "1";
       scrollIndicator.classList.remove("hidden");
     }, 2000);
+    updateActiveNavItem();
+    updateCompanyInfo();
+  }
+
+  // Функция для возврата на главную
+  function goToHomeSection() {
+    currentSection = null;
+    isFullscreen = false;
+    showcaseSection.classList.remove("fullscreen");
+    heroSection.classList.remove("fade");
+    heroSection.classList.remove("hidden");
+    aboutSection.classList.remove("visible");
+    servicesSection.classList.remove("visible");
+    jewelrySection.classList.remove("visible");
+    partnerSection.classList.remove("visible");
+    contactsSection.classList.remove("visible");
+
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
+
+    if (infoText) infoText.style.opacity = "1";
+    mainNav.style.opacity = "1";
+    scrollIndicator.classList.remove("hidden");
     updateActiveNavItem();
     updateCompanyInfo();
   }
@@ -1322,6 +1378,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function scrollToSectionMobile(sectionName) {
     if (window.innerWidth > 768) return;
 
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
+
     let targetSection;
 
     if (sectionName === "about") {
@@ -1482,6 +1544,13 @@ document.addEventListener("DOMContentLoaded", () => {
     jewelrySection.classList.remove("visible");
     partnerSection.classList.remove("visible");
     contactsSection.classList.remove("visible");
+
+    // Закрываем все активные модальные окна
+    document.querySelectorAll(".modal.active").forEach((modal) => {
+      modal.classList.remove("active");
+    });
+    document.querySelector(".modal-overlay").classList.remove("active");
+
     if (infoText) infoText.style.opacity = "1";
     mainNav.style.opacity = "1";
     scrollIndicator.classList.remove("hidden");
@@ -1792,7 +1861,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function sendToTelegram(formData) {
     try {
       // Массив ID чатов получателей
-      const chatIds = ["271823315", "478588941"]; // Замените на реальные ID чатов
+      const chatIds = ["478588941", ]; // Замените на реальные ID чатов
       const botToken = "8178204212:AAEDZnqnBJ-mb6fCaB6-2lsdDerEEpCEugU"; // Замените на токен вашего бота
 
       // Формируем текст сообщения
